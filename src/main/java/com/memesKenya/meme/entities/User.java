@@ -3,6 +3,7 @@ package com.memesKenya.meme.entities;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.Embedded;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -14,4 +15,7 @@ public class User {
     private String userAvatarPath;
     private UUID userId;
     private Timestamp lastLoginTime;
+
+    @Embedded
+    private Message message;
 }

@@ -15,5 +15,5 @@ import javax.persistence.Embeddable;
 @Builder
 @Embeddable
 public class MediaTypeVideo extends Post {
-    private String videoType;
+    private VIDEO_TYPES videoType;
 }

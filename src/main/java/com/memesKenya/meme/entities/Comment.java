@@ -1,20 +1,22 @@
 package com.memesKenya.meme.entities;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 import java.sql.Timestamp;
 
-@Data
 @Component
+@Data
 @AllArgsConstructor
-@Embeddable
 @NoArgsConstructor
-public class Message{
-    private String messageOwner;
-    private String message_content;
+@Builder
+public class Comment {
+    private String commentOwner;
     private Timestamp timeCreated;
+    @Embedded
+    private Message commentMessage;
 }

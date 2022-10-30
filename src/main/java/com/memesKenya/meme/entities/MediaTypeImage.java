@@ -15,5 +15,5 @@ import javax.persistence.Embeddable;
 @Builder
 @Embeddable
 public class MediaTypeImage extends Post{
-    private String imageType;
+    private IMAGE_TYPES imageType;
 }

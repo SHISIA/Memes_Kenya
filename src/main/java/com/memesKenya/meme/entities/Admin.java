@@ -10,5 +10,5 @@ import org.springframework.stereotype.Component;
 @Builder
 @Component
 public class Admin extends User {
-    String role;
+    private String role;
 }
