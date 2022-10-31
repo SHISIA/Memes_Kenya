@@ -17,9 +17,9 @@ import java.util.UUID;
 @Builder
 @Entity
 @Table(
-        name = "Comments"
+        name = "AdminComments"
 )
-public class Comment {
+public class AdminComment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -55,7 +55,7 @@ public class Comment {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Comment comment = (Comment) o;
+        AdminComment comment = (AdminComment) o;
         return id != null && Objects.equals(id, comment.id);
     }
 

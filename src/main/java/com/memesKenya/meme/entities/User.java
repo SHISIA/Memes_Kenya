@@ -3,11 +3,9 @@ package com.memesKenya.meme.entities;
 import lombok.*;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -34,6 +32,7 @@ public class User {
             unique = true
     )
     private String userPassword;
+
     @Column(
             name = "avatar_path",
             nullable = false
@@ -53,6 +52,4 @@ public class User {
     private String firstName;
     private String secondName;
 
-    @Embedded
-    private Message message;
 }

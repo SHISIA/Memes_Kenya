@@ -1,4 +1,4 @@
-package com.memesKenya.meme.service;
+package com.memesKenya.meme.service._serviceImpls;
 
 import com.memesKenya.meme.repository.AdminRepo;
 import org.springframework.beans.factory.annotation.Autowired;

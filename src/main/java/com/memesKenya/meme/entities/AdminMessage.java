@@ -16,19 +16,19 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(
-        name = "Messages"
+        name = "AdminTexts"
 )
-public class Message{
+public class AdminMessage {
     @Id
     @Column(
-            name = "unique_msgId",
+            name = "unique_adminId",
             nullable = false
     )
     private UUID messageId;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "message_owner")
-    private Memer user;
+    @JoinColumn(name = "adminName")
+    private Admin admin;
 
     @Column(
             name = "content",
@@ -36,7 +36,7 @@ public class Message{
     )
     private String message_content;
 
-    private String message_owner;
+    private String adminName;
 
     private Timestamp timeCreated;
 }

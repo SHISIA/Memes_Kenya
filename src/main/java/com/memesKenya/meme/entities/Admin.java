@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -16,5 +17,11 @@ import java.util.UUID;
 @Table(name = "Administrators")
 public class Admin extends User {
     private String role;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "admin")
+    private List<Comment> comments;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "admin")
+    private List<AdminMessage> messages;
 
 }

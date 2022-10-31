@@ -1,16 +1,15 @@
 package com.memesKenya.meme.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import java.util.UUID;
+import java.util.List;
 
 @Component
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -20,16 +19,12 @@ import java.util.UUID;
         name = "VideoPost"
 )
 public class MediaTypeVideo extends Post{
-    @Id
-    @Column(
-            name = "post_Id",
-            nullable = false,
-            unique = true
-    )
-    private UUID postId;
 
     private VIDEO_TYPES videoType;
     private double maxSize;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "video")
+    private List<Comment> comments;
     @ManyToOne(
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY

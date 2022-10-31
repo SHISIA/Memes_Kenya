@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -37,5 +38,8 @@ public class MediaTypeImage extends Post{
             name = "owner"
     )
     private Memer memer;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "image")
+    private List<Comment> comments;
 
 }

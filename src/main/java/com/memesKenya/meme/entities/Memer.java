@@ -35,6 +35,12 @@ public class Memer extends User{
    )
    private String nickName;
 
+   @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
+   private List<Comment> comments;
+
+   @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
+   private List<Message> messages;
+
    @OneToMany(fetch = FetchType.LAZY,mappedBy = "memer")
    @ToString.Exclude
    private List<MediaTypeImage> images;
