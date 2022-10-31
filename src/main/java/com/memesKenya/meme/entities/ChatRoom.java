@@ -1,29 +1,43 @@
 package com.memesKenya.meme.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.*;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Embeddable;
-import javax.persistence.Embedded;
+import javax.persistence.*;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 @Component
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Builder
+@Getter
+@Setter
+@ToString
+@Entity
 public class ChatRoom {
+    @Id
+    @Column(name = "room_id", nullable = false)
+    private UUID roomId;
 
-    @Autowired
-    private User owner;
-    @Autowired
-    private User guest;
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "chat")
+    private List<Memer> memers;
 
-    private String roomID;
 
     private HashMap<User,Message> roomMessages;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        ChatRoom chatRoom = (ChatRoom) o;
+        return roomId != null && Objects.equals(roomId, chatRoom.roomId);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

@@ -6,7 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.Embeddable;
+import javax.persistence.*;
+import java.util.UUID;
 
 @Component
 @Data
@@ -14,6 +15,27 @@ import javax.persistence.Embeddable;
 @NoArgsConstructor
 @Builder
 @Embeddable
+@Entity
+@Table(
+        name = "ImagePost"
+)
 public class MediaTypeImage extends Post{
+    @Id
+    @Column(
+            name = "post_Id",
+            nullable = false,
+            unique = true
+    )
+    private UUID postId;
     private IMAGE_TYPES imageType;
+    private double maxSize;
+    @ManyToOne(
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    @JoinColumn(
+            name = "owner"
+    )
+    private Memer memer;
+
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.sql.Timestamp;
 
@@ -14,7 +15,13 @@ import java.sql.Timestamp;
 @Embeddable
 @NoArgsConstructor
 public class Message{
-    private String messageOwner;
+    @Column(
+            name = "content",
+            nullable = false
+    )
     private String message_content;
+
+    private String message_owner;
+
     private Timestamp timeCreated;
 }

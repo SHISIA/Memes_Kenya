@@ -1,17 +1,60 @@
 package com.memesKenya.meme.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Component;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Component
-public class Memer extends User{
+import javax.persistence.*;
+import java.util.List;
+import java.util.Objects;
 
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
+@AllArgsConstructor
+@Builder
+@Entity
+@Component
+@Table(
+        name = "meme_member",
+        uniqueConstraints =
+                { @UniqueConstraint
+                        (name = "UniqueContactAndNickName",
+                                columnNames = { "phone_number", "nick_name" })
+                })
+public class Memer extends User{
+   @Column(
+           name = "phone_number",
+           nullable = false
+   )
+   private String phoneNumber;
+   @Column(
+           name = "nick_name",
+           nullable = false
+   )
    private String nickName;
+
+   @OneToMany(fetch = FetchType.LAZY,mappedBy = "memer")
+   @ToString.Exclude
+   private List<MediaTypeImage> images;
+
+   @OneToMany(fetch = FetchType.LAZY,mappedBy = "memer")
+   @ToString.Exclude
+   private List<MediaTypeVideo> videos;
+
+   @ManyToOne(fetch = FetchType.LAZY)
+   private ChatRoom chat;
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+      Memer memer = (Memer) o;
+      return nickName != null && Objects.equals(nickName, memer.nickName);
+   }
+
+   @Override
+   public int hashCode() {
+      return getClass().hashCode();
+   }
 }
