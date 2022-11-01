@@ -31,12 +31,10 @@ public class AdminMessage {
     private Admin admin;
 
     @Column(
-            name = "content",
+            name = "Message",
             nullable = false
     )
     private String message_content;
-
-    private String adminName;
 
     private Timestamp timeCreated;
 }

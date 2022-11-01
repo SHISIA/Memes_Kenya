@@ -12,7 +12,6 @@ import java.util.UUID;
 @Data
 @Component
 @AllArgsConstructor
-@Embeddable
 @NoArgsConstructor
 @Entity
 @Table(
@@ -22,7 +21,8 @@ public class Message{
     @Id
     @Column(
             name = "unique_msgId",
-            nullable = false
+            nullable = false,
+            unique = true
     )
     private UUID messageId;
 
@@ -31,12 +31,10 @@ public class Message{
     private Memer user;
 
     @Column(
-            name = "content",
+            name = "Message_Content",
             nullable = false
     )
     private String message_content;
-
-    private String message_owner;
 
     private Timestamp timeCreated;
 }

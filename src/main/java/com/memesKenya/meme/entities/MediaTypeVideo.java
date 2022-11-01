@@ -30,7 +30,7 @@ public class MediaTypeVideo extends Post{
             fetch = FetchType.LAZY
     )
     @JoinColumn(
-            name = "owner"
+            name = "PostOwner"
     )
     private Memer memer;
 }

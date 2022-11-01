@@ -5,6 +5,7 @@ import org.hibernate.Hibernate;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -26,30 +27,28 @@ public class Comment {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "postId")
+    @JoinColumn(name = "Referred_PostId",nullable = false)
     private MediaTypeVideo video;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "postId")
+    @JoinColumn(name = "postId",nullable = false)
     private MediaTypeImage image;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_owner_userId")
+    @JoinColumn(name = "Commenter_userId",nullable = false)
     private Admin admin;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_owner_userId")
+    @JoinColumn(name = "commentOwner_userId",nullable = false)
     private Memer user;
 
-    @Column(nullable = false)
-    @ToString.Exclude
-    private UUID postId;
+    @Column(
+            name = "Contents",
+            nullable = false
+    )
+    private String message_content;
 
-    @Column(name = "comment_owner_userId")
-    private UUID userId;
-
-    @Embedded
-    private Message commentMessage;
+    private Timestamp timeCreated;
 
     @Override
     public boolean equals(Object o) {

@@ -28,6 +28,7 @@ public class MediaTypeImage extends Post{
             unique = true
     )
     private UUID postId;
+
     private IMAGE_TYPES imageType;
     private double maxSize;
     @ManyToOne(
@@ -35,7 +36,7 @@ public class MediaTypeImage extends Post{
             fetch = FetchType.LAZY
     )
     @JoinColumn(
-            name = "owner"
+            name = "ImagePostOwner"
     )
     private Memer memer;
 
