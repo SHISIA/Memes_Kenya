@@ -2,7 +2,7 @@ package com.memesKenya.meme.controller;
 
 import com.memesKenya.meme.Exceptions.PostNotFoundException;
 import com.memesKenya.meme.entities.MediaTypeImage;
-import com.memesKenya.meme.service._service.ImageService;
+import com.memesKenya.meme.service._service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -18,13 +18,13 @@ import java.util.UUID;
 @RestController
 public class PostController {
     @Autowired
-    private ImageService imageService;
+    private PostService postService;
 
     @PostMapping("/upload")
     public String  uploadImageFile(@RequestParam("file") MultipartFile file) throws Exception {
         MediaTypeImage mediaTypeImage=null;
         String downloadURL="";
-        mediaTypeImage=imageService.upload(file);
+        mediaTypeImage= postService.upload(file);
         downloadURL= ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/download/")
                 .path(mediaTypeImage.getPostId().toString())
@@ -34,8 +34,8 @@ public class PostController {
 
     @GetMapping("/download/{fileId}")
     public ResponseEntity<Resource> downloadImagePost(@PathVariable UUID fileId) throws PostNotFoundException {
-        MediaTypeImage mediaTypeImage =imageService.findPostByUUID(fileId);
-        imageService.download(mediaTypeImage.getPostId());
+        MediaTypeImage mediaTypeImage = postService.findPostByUUID(fileId);
+        postService.download(mediaTypeImage.getPostId());
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(
                         mediaTypeImage.getImageType()
@@ -45,15 +45,21 @@ public class PostController {
                 ).body(new ByteArrayResource(mediaTypeImage.getImageData()));
     }
 
-    @PostMapping("/like/{postId}")
+    @PutMapping("/like/{postId}")
     public String likePost(@PathVariable UUID postId) throws Exception {
-        imageService.like(postId);
+        postService.like(postId);
         return getLikeCounts(postId)+" Likes";
     }
 
     @PostMapping("/like/likes/{post}")
     public int getLikeCounts(@PathVariable UUID post){
-        return imageService.likeCount(post);
+        return postService.likeCount(post);
+    }
+
+    @PutMapping("/share")
+    public String share(@RequestParam UUID postId){
+        postService.share(postId);
+        return postService.getShareCount(postId)+" Shares";
     }
 
 }

@@ -1,21 +1,24 @@
 package com.memesKenya.meme.service._service;
 
-import com.memesKenya.meme.entities.Post;
-import org.springframework.security.core.parameters.P;
+import com.memesKenya.meme.Exceptions.PostNotFoundException;
+import com.memesKenya.meme.entities.MediaTypeImage;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.util.UUID;
 
 public interface PostService {
+    MediaTypeImage upload(MultipartFile file) throws Exception;
 
-    List<Post> getAllPosts();
+    MediaTypeImage findPostByUUID(UUID uuid) throws PostNotFoundException;
 
-    List<Post> getPostContaining(String term);
+    int like(UUID uuid) throws Exception;
 
-    List<Post> getLatestPost();
+    void download(UUID postId);
 
-    void flagPost(Post post);
+    void share(UUID postId);
 
-    void uploadPost();
+    int getShareCount(UUID postId);
 
-    void createPost();
+    int likeCount(UUID postId);
 }
+

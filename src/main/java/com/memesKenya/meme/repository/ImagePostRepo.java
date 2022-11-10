@@ -13,12 +13,19 @@ import java.util.UUID;
 public interface ImagePostRepo extends JpaRepository<MediaTypeImage, UUID> {
 
     @Modifying
-    @Query("update MediaTypeImage m set m.likeCount=m.likeCount+1 where m.postId=id ")
-    void like(@Param("id") UUID id);
+    @Query("update MediaTypeImage m set m.likeCount=m.likeCount+1 where m.postId=?1 ")
+    void like(UUID id);
 
     @Modifying
-    @Query("update MediaTypeImage m set m.downloads=m.downloads+1 where m.postId=id ")
-    void download(@Param("id") UUID post);
+    @Query("update MediaTypeImage m set m.shares=m.shares+1 where m.postId=?1 ")
+    void share(UUID id);
+
+    @Modifying
+    @Query("update MediaTypeImage m set m.downloads=m.downloads+1 where m.postId=?1 ")
+    void download(UUID post);
+
+    @Query("select m.shares from MediaTypeImage m where m.postId=?1")
+    int getShareCount(UUID postId);
 
     @Query("select m.likeCount from MediaTypeImage m where m.postId=?1")
     int getLikeCount(UUID post);
