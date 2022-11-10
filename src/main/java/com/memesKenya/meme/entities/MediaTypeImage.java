@@ -1,21 +1,18 @@
 package com.memesKenya.meme.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
-@Component
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Embeddable
+@RequiredArgsConstructor
 @Entity
 @Table(
         name = "ImagePost"
@@ -27,10 +24,15 @@ public class MediaTypeImage extends Post{
             nullable = false,
             unique = true
     )
-    private UUID postId;
+    @GeneratedValue (generator = "UUID")
+    @GenericGenerator(name = "uuid",strategy = "org.hibernate.id.UUIDGenerator")
+    @Type(type = "org.hibernate.type.UUIDCharType")
+    private  UUID postId;
 
-    private IMAGE_TYPES imageType;
-    private double maxSize;
+    private String imageType;
+
+    @Lob
+    private byte[] imageData;
     @ManyToOne(
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
@@ -38,9 +40,15 @@ public class MediaTypeImage extends Post{
     @JoinColumn(
             name = "ImagePostOwner"
     )
-    private Memer memer;
+    private  Memer memer;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "image")
     private List<Comment> comments;
+
+    public MediaTypeImage(String title, double mediaSize, String imageType, byte[] imageData){
+        super(title,Timestamp.from(Instant.now()),0,0,0,0,mediaSize);
+        this.imageType=imageType;
+        this.imageData=imageData;
+    }
 
 }

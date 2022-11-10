@@ -15,5 +15,7 @@ public interface PostService {
 
     void flagPost(Post post);
 
+    void uploadPost();
+
     void createPost();
 }
