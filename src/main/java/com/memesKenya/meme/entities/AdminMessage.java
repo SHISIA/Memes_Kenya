@@ -3,6 +3,7 @@ package com.memesKenya.meme.entities;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -24,6 +25,7 @@ public class AdminMessage {
             name = "unique_adminId",
             nullable = false
     )
+    @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID messageId;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)

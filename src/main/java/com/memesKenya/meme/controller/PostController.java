@@ -1,7 +1,7 @@
 package com.memesKenya.meme.controller;
 
 import com.memesKenya.meme.Exceptions.PostNotFoundException;
-import com.memesKenya.meme.entities.MediaTypeImage;
+import com.memesKenya.meme.entities.MediaPost;
 import com.memesKenya.meme.service._service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -22,27 +22,27 @@ public class PostController {
 
     @PostMapping("/upload")
     public String  uploadImageFile(@RequestParam("file") MultipartFile file) throws Exception {
-        MediaTypeImage mediaTypeImage=null;
+        MediaPost mediaPost =null;
         String downloadURL="";
-        mediaTypeImage= postService.upload(file);
+        mediaPost = postService.upload(file);
         downloadURL= ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/download/")
-                .path(mediaTypeImage.getPostId().toString())
+                .path(mediaPost.getPostId().toString())
                 .toUriString();
         return  downloadURL;
     }
 
     @GetMapping("/download/{fileId}")
     public ResponseEntity<Resource> downloadImagePost(@PathVariable UUID fileId) throws PostNotFoundException {
-        MediaTypeImage mediaTypeImage = postService.findPostByUUID(fileId);
-        postService.download(mediaTypeImage.getPostId());
+        MediaPost mediaPost = postService.findPostByUUID(fileId);
+        postService.download(mediaPost.getPostId());
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(
-                        mediaTypeImage.getImageType()
+                        mediaPost.getImageType()
                 )).header(HttpHeaders.CONTENT_DISPOSITION,
-                        "mediaTypeImage; filename=\""
-                        +mediaTypeImage.getPostId()+"\""
-                ).body(new ByteArrayResource(mediaTypeImage.getImageData()));
+                        "mediaPost; filename=\""
+                        + mediaPost.getPostId()+"\""
+                ).body(new ByteArrayResource(mediaPost.getImageData()));
     }
 
     @PutMapping("/like/{postId}")

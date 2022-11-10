@@ -43,11 +43,7 @@ public class Memer extends User{
 
    @OneToMany(fetch = FetchType.LAZY,mappedBy = "memer")
    @ToString.Exclude
-   private List<MediaTypeImage> images;
-
-   @OneToMany(fetch = FetchType.LAZY,mappedBy = "memer")
-   @ToString.Exclude
-   private List<MediaTypeVideo> videos;
+   private List<MediaPost> images;
 
    @ManyToOne(fetch = FetchType.LAZY)
    private ChatRoom chat;

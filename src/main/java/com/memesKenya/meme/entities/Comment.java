@@ -2,12 +2,14 @@ package com.memesKenya.meme.entities;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
-import java.util.UUID;
 
 @Component
 @Getter
@@ -24,22 +26,16 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
+    @GenericGenerator(name = "uuid",strategy = "org.hibernate.id.UUIDGenerator")
+    @Type(type = "org.hibernate.type.UUIDCharType")
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "Referred_PostId",nullable = false)
-    private MediaTypeVideo video;
-
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "postId",nullable = false)
-    private MediaTypeImage image;
+    private MediaPost post;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "Commenter_userId",nullable = false)
-    private Admin admin;
-
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "commentOwner_userId",nullable = false)
+    @JoinColumn(name = "commentOwner",nullable = false)
     private Memer user;
 
     @Column(

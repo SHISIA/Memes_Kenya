@@ -2,6 +2,7 @@ package com.memesKenya.meme.entities;
 
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ import java.util.UUID;
 public class ChatRoom {
     @Id
     @Column(name = "room_id", nullable = false)
+    @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID roomId;
 
     @OneToMany(fetch = FetchType.LAZY,mappedBy = "chat")

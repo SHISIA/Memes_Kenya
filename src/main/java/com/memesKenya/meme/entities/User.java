@@ -1,6 +1,7 @@
 package com.memesKenya.meme.entities;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -21,6 +22,7 @@ public class User {
             name = "user_Id",
             nullable = false
     )
+    @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID userId;
 
     private String userName;

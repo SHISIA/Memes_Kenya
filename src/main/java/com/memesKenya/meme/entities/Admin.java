@@ -18,7 +18,7 @@ import java.util.UUID;
 public class Admin extends User {
     private String role;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "admin")
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
     private List<Comment> comments;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "admin")

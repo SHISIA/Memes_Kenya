@@ -1,8 +1,8 @@
 package com.memesKenya.meme.service._serviceImpls;
 
 import com.memesKenya.meme.Exceptions.PostNotFoundException;
-import com.memesKenya.meme.entities.MediaTypeImage;
-import com.memesKenya.meme.repository.ImagePostRepo;
+import com.memesKenya.meme.entities.MediaPost;
+import com.memesKenya.meme.repository.PostRepo;
 import com.memesKenya.meme.service._service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,30 +19,30 @@ import java.util.UUID;
 public class PostServiceImpl implements PostService {
 
     @Autowired
-    private ImagePostRepo repo;
+    private PostRepo repo;
 
     @Override
-    public MediaTypeImage upload(MultipartFile file) throws Exception {
+    public MediaPost upload(MultipartFile file) throws Exception {
         String fileName= StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         if (fileName.contains("..")){
             throw new Exception("Cannot find file specified");
         }
-        MediaTypeImage image=new MediaTypeImage(fileName,file.getSize(),file.getContentType(),file.getBytes());
+        MediaPost image=new MediaPost(fileName,file.getSize(),file.getContentType(),file.getBytes());
         return repo.save(image);
     }
 
     @Override
-    public MediaTypeImage findPostByUUID(UUID postId) throws PostNotFoundException {
+    public MediaPost findPostByUUID(UUID postId) throws PostNotFoundException {
         return repo.findById(postId).orElseThrow(()->new PostNotFoundException("Post with  ID "+postId+" not found",Timestamp.valueOf(LocalDateTime.now())));
     }
 
     @Override
     @Transactional
     public int like(UUID uuid) throws Exception {
-       MediaTypeImage mediaTypeImage= repo.findById(uuid)
+       MediaPost mediaPost = repo.findById(uuid)
                .orElseThrow(() -> new Exception("Post Not Available" + uuid));
-       repo.like(mediaTypeImage.getPostId());
-       return likeCount(mediaTypeImage.getPostId());
+       repo.like(mediaPost.getPostId());
+       return likeCount(mediaPost.getPostId());
     }
 
     @Override

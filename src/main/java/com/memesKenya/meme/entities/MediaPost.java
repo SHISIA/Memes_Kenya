@@ -15,9 +15,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Entity
 @Table(
-        name = "ImagePost"
+        name = "Post"
 )
-public class MediaTypeImage extends Post{
+public class MediaPost extends Post{
     @Id
     @Column(
             name = "post_Id",
@@ -42,10 +42,10 @@ public class MediaTypeImage extends Post{
     )
     private  Memer memer;
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "image")
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "post")
     private List<Comment> comments;
 
-    public MediaTypeImage(String title, double mediaSize, String imageType, byte[] imageData){
+    public MediaPost(String title, double mediaSize, String imageType, byte[] imageData){
         super(title,Timestamp.from(Instant.now()),0,0,0,0,mediaSize);
         this.imageType=imageType;
         this.imageData=imageData;

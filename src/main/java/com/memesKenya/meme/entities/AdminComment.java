@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
-import java.util.UUID;
 
 @Component
 @Getter
@@ -27,12 +26,8 @@ public class AdminComment {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "postId",nullable = false)
-    private MediaTypeVideo video;
-
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "Parent_Post_ID",nullable = false)
-    private MediaTypeImage image;
+    private MediaPost image;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "CommentOwnerId",nullable = false)
