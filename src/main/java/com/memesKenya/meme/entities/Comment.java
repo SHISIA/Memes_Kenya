@@ -44,6 +44,7 @@ public class Comment {
     )
     private String message_content;
 
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Timestamp timeCreated;
 
     @Override
