@@ -2,6 +2,7 @@ package com.memesKenya.meme.controller;
 
 import com.memesKenya.meme.Exceptions.PostNotFoundException;
 import com.memesKenya.meme.entities.MediaPost;
+import com.memesKenya.meme.entities.Memer;
 import com.memesKenya.meme.service._service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -60,6 +61,11 @@ public class PostController {
     public String share(@RequestParam UUID postId){
         postService.share(postId);
         return postService.getShareCount(postId)+" Shares";
+    }
+
+    @GetMapping("/getOwner/{id}")
+    public Memer getPostOwner(@RequestParam("owner") UUID postOwner,@PathVariable("id") UUID postId){
+        return postService.postOwner(postOwner,postId);
     }
 
 }

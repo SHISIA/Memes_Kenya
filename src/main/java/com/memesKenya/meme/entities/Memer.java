@@ -1,10 +1,13 @@
 package com.memesKenya.meme.entities;
 
+import com.memesKenya.meme.model.User;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,12 +26,13 @@ import java.util.Objects;
                         (name = "UniqueContactAndNickName",
                                 columnNames = { "phone_number", "nick_name" })
                 })
-public class Memer extends User{
+public class Memer extends User {
    @Column(
            name = "phone_number",
            nullable = false
    )
    private String phoneNumber;
+
    @Column(
            name = "nick_name",
            nullable = false
@@ -43,10 +47,26 @@ public class Memer extends User{
 
    @OneToMany(fetch = FetchType.LAZY,mappedBy = "memer")
    @ToString.Exclude
-   private List<MediaPost> images;
+   private List<MediaPost> posts;
 
-   @ManyToOne(fetch = FetchType.LAZY)
+   @ManyToOne(fetch = FetchType.LAZY,targetEntity = ChatRoom.class)
    private ChatRoom chat;
+
+   @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+   @ToString.Exclude
+   private List<Notification> notifications;
+
+   @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "memer")
+   @ToString.Exclude
+   private List<AdminMessage> adminMessages;
+
+   public Memer(String username,String password,byte[] userAvatar,String emailAddress,
+                String firstName,String lastName,String nickName,String phoneNumber){
+      super(username,password,userAvatar,emailAddress,Timestamp.from(Instant.now()),firstName,lastName);
+      this.nickName=nickName;
+      this.phoneNumber=phoneNumber;
+   }
+
    @Override
    public boolean equals(Object o) {
       if (this == o) return true;

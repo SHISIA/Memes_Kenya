@@ -11,9 +11,9 @@ public interface CommentService {
 
     int getTotalPostComments(UUID postId);
 
-    String getCommentContent(Long commentId);
+    String getCommentContent(UUID commentId);
 
     List<Comment> comments(UUID postId);
 
-    String edit(UUID postId, Long commentId,String newComment);
+    String edit(UUID postId, UUID commentId,String newComment);
 }

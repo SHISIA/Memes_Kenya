@@ -26,7 +26,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public String getCommentContent(Long commentId) {
+    public String getCommentContent(UUID commentId) {
         return repo.getCommentContent(commentId);
     }
 
@@ -37,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Transactional
     @Override
-    public String edit(UUID postId, Long commentId,String newComment) {
+    public String edit(UUID postId, UUID commentId,String newComment) {
          repo.editComment(postId,commentId,newComment);
          return "Edit Successful";
     }

@@ -1,4 +1,4 @@
-package com.memesKenya.meme.entities;
+package com.memesKenya.meme.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

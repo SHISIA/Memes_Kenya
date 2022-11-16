@@ -23,7 +23,7 @@ public class CommentController {
         return service.edit(postId,comment.getId(),newComment);
     }
     @GetMapping("/contents/{id}")
-    public String commentContent(@PathVariable Long id){
+    public String commentContent(@PathVariable UUID id){
         return service.getCommentContent(id);
     }
     @PostMapping("/comments")

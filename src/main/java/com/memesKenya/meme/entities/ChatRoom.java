@@ -1,5 +1,6 @@
 package com.memesKenya.meme.entities;
 
+import com.memesKenya.meme.model.User;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
@@ -24,7 +25,7 @@ public class ChatRoom {
     @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID roomId;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "chat")
+    @ManyToOne(fetch = FetchType.LAZY,targetEntity = Memer.class)
     private List<Memer> memers;
 
 

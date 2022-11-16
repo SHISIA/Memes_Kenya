@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.UUID;
 
 @Component
 @Getter
@@ -28,14 +29,14 @@ public class Comment {
     @Column(name = "id", nullable = false)
     @GenericGenerator(name = "uuid",strategy = "org.hibernate.id.UUIDGenerator")
     @Type(type = "org.hibernate.type.UUIDCharType")
-    private Long id;
+    private UUID id;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "postId",nullable = false)
+    @JoinColumn(name = "postId",nullable = false,referencedColumnName = "post_Id")
     private MediaPost post;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JoinColumn(name = "commentOwner",nullable = false)
+    @JoinColumn(name = "commentOwner",nullable = false,referencedColumnName = "user_Id")
     private Memer user;
 
     @Column(

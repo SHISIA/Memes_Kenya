@@ -2,6 +2,7 @@ package com.memesKenya.meme.service._serviceImpls;
 
 import com.memesKenya.meme.Exceptions.PostNotFoundException;
 import com.memesKenya.meme.entities.MediaPost;
+import com.memesKenya.meme.entities.Memer;
 import com.memesKenya.meme.repository.PostRepo;
 import com.memesKenya.meme.service._service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public int likeCount(UUID postId) {
         return repo.getLikeCount(postId);
+    }
+
+    @Override
+    public Memer postOwner(UUID postOwner, UUID postId) {
+        return repo.postOwner(postOwner,postId);
     }
 
 }

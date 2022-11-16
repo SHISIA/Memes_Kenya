@@ -32,6 +32,10 @@ public class AdminMessage {
     @JoinColumn(name = "adminName")
     private Admin admin;
 
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipient")
+    private Memer memer;
+
     @Column(
             name = "Message",
             nullable = false

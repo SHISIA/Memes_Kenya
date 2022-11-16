@@ -1,5 +1,6 @@
 package com.memesKenya.meme.entities;
 
+import com.memesKenya.meme.model.Post;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -17,14 +18,14 @@ import java.util.UUID;
 @Table(
         name = "Post"
 )
-public class MediaPost extends Post{
+public class MediaPost extends Post {
     @Id
     @Column(
             name = "post_Id",
             nullable = false,
             unique = true
     )
-    @GeneratedValue (generator = "UUID")
+    @GeneratedValue (generator = "UUID",strategy = GenerationType.AUTO)
     @GenericGenerator(name = "uuid",strategy = "org.hibernate.id.UUIDGenerator")
     @Type(type = "org.hibernate.type.UUIDCharType")
     private  UUID postId;
@@ -38,7 +39,7 @@ public class MediaPost extends Post{
             fetch = FetchType.LAZY
     )
     @JoinColumn(
-            name = "ImagePostOwner"
+            name = "PostOwner"
     )
     private  Memer memer;
 
