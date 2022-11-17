@@ -1,7 +1,9 @@
 package com.memesKenya.meme.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.memesKenya.meme.model.User;
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Component;
 
@@ -42,8 +44,13 @@ public class Memer extends User {
    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
    private List<Comment> comments;
 
-   @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
+   @JsonManagedReference(value = "sender")
+   @OneToMany(cascade = CascadeType.ALL,mappedBy = "sender",fetch = FetchType.LAZY)
    private List<Message> messages;
+
+   @JsonManagedReference(value = "recipient")
+   @OneToMany(cascade = CascadeType.ALL,mappedBy = "recipient",fetch = FetchType.LAZY)
+   private List<Message> received_messages;
 
    @OneToMany(fetch = FetchType.LAZY,mappedBy = "memer")
    @ToString.Exclude

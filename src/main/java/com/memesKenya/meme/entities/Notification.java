@@ -2,22 +2,22 @@ package com.memesKenya.meme.entities;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Component
 @Getter
 @Setter
+@Entity
 public class Notification {
     @Id
     @Type(type = "org.hibernate.type.UUIDCharType")
-    private UUID memerId;
+    @GeneratedValue(strategy = GenerationType.AUTO,generator ="uuid")
+    private UUID notificationId;
 
     private String notification;
 

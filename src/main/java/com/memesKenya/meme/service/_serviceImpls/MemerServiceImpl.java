@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -47,6 +48,9 @@ public class MemerServiceImpl implements MemerService {
     @Override
     @Transactional
     public String changeMemerAvatar(Memer memer,MultipartFile avatar) throws IOException {
+        if (!(Objects.equals(avatar.getContentType(), "image/png") ||Objects.equals(avatar.getContentType(), "image/jpeg"))){
+            return "Cannot use "+avatar.getContentType()+" for your picture handle";
+        }
          repo.changeMemerAvatar(memer.getUserId(),avatar.getBytes());
          return "Updated "+memer.getNickName()+"'s Profile pic Successfully";
     }

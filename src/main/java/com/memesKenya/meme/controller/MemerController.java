@@ -1,11 +1,8 @@
 package com.memesKenya.meme.controller;
 
-import com.memesKenya.meme.Exceptions.PostNotFoundException;
-import com.memesKenya.meme.entities.MediaPost;
 import com.memesKenya.meme.entities.Memer;
 import com.memesKenya.meme.model.Person;
 import com.memesKenya.meme.service._service.MemerService;
-import org.apache.logging.log4j.util.Chars;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -16,13 +13,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.Persistence;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 @RestController
 public class MemerController {
@@ -44,9 +38,6 @@ public class MemerController {
     @PutMapping("/changeAvatar/{id}")
     public String changeAvatar(@PathVariable("id") UUID memerId,
                                @RequestParam("file") MultipartFile file) throws IOException {
-        if (!Objects.equals(file.getContentType(), "image/png")){
-            return "Cannot use "+file.getContentType()+" for your picture handle";
-        }
         Memer memer=service.findById(memerId);
         return service.changeMemerAvatar(memer,file);
     }
