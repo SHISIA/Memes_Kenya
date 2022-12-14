@@ -25,5 +25,6 @@ public class Person{
     private String secondName;
     private String phoneNumber;
     private String nickName;
+    private String accountStatus;
 
 }

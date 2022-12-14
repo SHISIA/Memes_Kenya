@@ -56,7 +56,9 @@ public class User {
     private String firstName;
     private String secondName;
 
-    public User(String username, String password, byte[] userAvatar, String emailAddress,Timestamp lastLoginTime, String firstName, String lastName) {
+    private String accountStatus;
+
+    public User(String username, String password, byte[] userAvatar, String emailAddress,Timestamp lastLoginTime, String firstName, String lastName,String accountStatus) {
         this.userName=username;
         this.userPassword=password;
         this.userAvatar=userAvatar;
@@ -64,5 +66,6 @@ public class User {
         this.lastLoginTime=lastLoginTime;
         this.firstName=firstName;
         this.secondName=lastName;
+        this.accountStatus=accountStatus;
     }
 }

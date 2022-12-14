@@ -28,7 +28,7 @@ public class MemerServiceImpl implements MemerService {
     @Override
     public boolean registerNewMemer(Person person) {
         Memer memer=new Memer(person.getUserName(), person.getUserPassword(), null,
-                person.getEmailAddress(),person.getFirstName(), person.getSecondName(), "@"+person.getNickName(), person.getPhoneNumber());
+                person.getEmailAddress(),person.getFirstName(), person.getSecondName(), "@"+person.getNickName(), person.getPhoneNumber(),person.getAccountStatus());
         Optional<Memer> memerOptional=Optional.ofNullable(repo.findByNickName(person.getNickName()));
         if (memerOptional.isEmpty()){
             repo.save(memer);

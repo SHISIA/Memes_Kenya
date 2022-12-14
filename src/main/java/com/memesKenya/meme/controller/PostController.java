@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @RestController
 public class PostController {
@@ -23,6 +26,10 @@ public class PostController {
 
     @PostMapping("/upload")
     public String  uploadImageFile(@RequestParam("file") MultipartFile file) throws Exception {
+        List<String> list= List.of(".jpg",".png",".jpeg",".webp",".ico",".jfif");
+        if (list.stream().noneMatch(Objects.requireNonNull(file.getOriginalFilename()).toLowerCase()::endsWith)){
+            return "This file format currently is not allowed";
+        }
         MediaPost mediaPost =null;
         String downloadURL="";
         mediaPost = postService.upload(file);
@@ -37,13 +44,14 @@ public class PostController {
     public ResponseEntity<Resource> downloadImagePost(@PathVariable UUID fileId) throws PostNotFoundException {
         MediaPost mediaPost = postService.findPostByUUID(fileId);
         postService.download(mediaPost.getPostId());
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(
-                        mediaPost.getImageType()
-                )).header(HttpHeaders.CONTENT_DISPOSITION,
-                        "mediaPost; filename=\""
-                        + mediaPost.getPostId()+"\""
-                ).body(new ByteArrayResource(mediaPost.getImageData()));
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "mediaPost; filename=\""
+                                    + mediaPost.getPostId()+".png\""
+                    ).contentType(MediaType.parseMediaType(
+                            mediaPost.getImageType()
+                    ))
+                    .body(new ByteArrayResource(mediaPost.getImageData()));
     }
 
     @PutMapping("/like/{postId}")

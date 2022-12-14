@@ -68,8 +68,8 @@ public class Memer extends User {
    private List<AdminMessage> adminMessages;
 
    public Memer(String username,String password,byte[] userAvatar,String emailAddress,
-                String firstName,String lastName,String nickName,String phoneNumber){
-      super(username,password,userAvatar,emailAddress,Timestamp.from(Instant.now()),firstName,lastName);
+                String firstName,String lastName,String nickName,String phoneNumber,String accountStatus){
+      super(username,password,userAvatar,emailAddress,Timestamp.from(Instant.now()),firstName,lastName,accountStatus);
       this.nickName=nickName;
       this.phoneNumber=phoneNumber;
    }
