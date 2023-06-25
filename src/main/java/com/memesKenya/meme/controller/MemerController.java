@@ -18,11 +18,12 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequestMapping("api/v1/Memers")
 public class MemerController {
     @Autowired
     private MemerService service;
     @GetMapping("/allMemers")
-    public List<Memer> allMemers(){
+    public List<Memer> getAllMemers(){
         return service.getAllMemers();
     }
     @PostMapping("/newMemer")
