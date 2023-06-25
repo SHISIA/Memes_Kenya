@@ -15,13 +15,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @RestController
 public class MemerController {
     @Autowired
-    MemerService service;
+    private MemerService service;
     @GetMapping("/allMemers")
     public List<Memer> allMemers(){
         return service.getAllMemers();
@@ -29,10 +28,8 @@ public class MemerController {
     @PostMapping("/newMemer")
     public String newMemerAccount(@RequestBody Person person) {
         boolean saved=service.registerNewMemer(person);
-        if (saved){
-            return "Successfully registered "+person.getFirstName()+" "+person.getSecondName();
-        }
-        return "Error creating user. Try again";
+        return saved ? "Successfully registered "+person.getFirstName()+" "+person.getSecondName()
+                : "Error creating user. Try again";
     }
 
     @PutMapping("/changeAvatar/{id}")

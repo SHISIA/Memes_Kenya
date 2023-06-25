@@ -9,6 +9,4 @@ public class AdminServiceImpl {
     @Autowired
     private AdminRepo adminRepo;
 
-
-
 }
