@@ -1,7 +1,10 @@
 package com.memesKenya.meme.model;
 
+import com.memesKenya.meme.entities.Role;
 import lombok.*;
 import org.springframework.stereotype.Component;
+
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,5 +23,6 @@ public class Person{
     private String phoneNumber;
     private String nickName;
     private String accountStatus;
+    private String role;
 
 }
