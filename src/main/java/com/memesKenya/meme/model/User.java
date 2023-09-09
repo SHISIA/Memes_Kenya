@@ -1,12 +1,16 @@
 package com.memesKenya.meme.model;
 
+import com.memesKenya.meme.entities.Role;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.sql.Timestamp;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -24,7 +28,7 @@ public class User {
             name = "user_Id",
             nullable = false
     )
-    @Type(type = "org.hibernate.type.UUIDCharType")
+//    @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID userId;
 
     private String userName;
@@ -32,7 +36,6 @@ public class User {
     @Column(
             name = "password",
             nullable = false,
-            length = 30,
             unique = true
     )
     private String userPassword;
@@ -52,13 +55,12 @@ public class User {
             name = "lastLogged"
     )
     private Timestamp lastLoginTime;
-
     private String firstName;
     private String secondName;
-
     private String accountStatus;
-
-    public User(String username, String password, byte[] userAvatar, String emailAddress,Timestamp lastLoginTime, String firstName, String lastName,String accountStatus) {
+    private String role;
+    public User(String username, String password, byte[] userAvatar, String emailAddress,Timestamp lastLoginTime, String firstName, String lastName,String accountStatus,
+                String role) {
         this.userName=username;
         this.userPassword=password;
         this.userAvatar=userAvatar;
@@ -66,6 +68,7 @@ public class User {
         this.lastLoginTime=lastLoginTime;
         this.firstName=firstName;
         this.secondName=lastName;
+        this.role=role;
         this.accountStatus=accountStatus;
     }
 }

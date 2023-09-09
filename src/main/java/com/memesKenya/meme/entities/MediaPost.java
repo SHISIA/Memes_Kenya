@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -27,7 +27,7 @@ public class MediaPost extends Post {
     )
     @GeneratedValue (generator = "UUID",strategy = GenerationType.AUTO)
     @GenericGenerator(name = "uuid",strategy = "org.hibernate.id.UUIDGenerator")
-    @Type(type = "org.hibernate.type.UUIDCharType")
+//    @Type(type = "org.hibernate.type.UUIDCharType")
     private  UUID postId;
 
     private String imageType;

@@ -8,7 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -29,7 +29,7 @@ public class Message{
             nullable = false,
             unique = true
     )
-    @Type(type = "org.hibernate.type.UUIDCharType")
+//    @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID messageId;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)

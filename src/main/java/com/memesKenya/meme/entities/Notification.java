@@ -6,7 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.UUID;
 
 @Component
@@ -15,7 +15,7 @@ import java.util.UUID;
 @Entity
 public class Notification {
     @Id
-    @Type(type = "org.hibernate.type.UUIDCharType")
+//    @Type(type = "org.hibernate.type.UUIDCharType")
     @GeneratedValue(strategy = GenerationType.AUTO,generator ="uuid")
     private UUID notificationId;
 

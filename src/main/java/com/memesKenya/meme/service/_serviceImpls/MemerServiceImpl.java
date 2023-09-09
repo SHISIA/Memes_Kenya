@@ -4,8 +4,11 @@ import com.memesKenya.meme.entities.Memer;
 import com.memesKenya.meme.model.Person;
 import com.memesKenya.meme.repository.MemerRepo;
 import com.memesKenya.meme.service._service.MemerService;
+import org.bouncycastle.crypto.generators.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,6 +23,12 @@ import java.util.UUID;
 public class MemerServiceImpl implements MemerService {
     @Autowired
     private MemerRepo repo;
+    private final PasswordEncoder passwordEncoder;
+
+    public MemerServiceImpl(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @Override
     public List<Memer> getAllMemers() {
         return repo.findAll();
@@ -27,8 +36,12 @@ public class MemerServiceImpl implements MemerService {
 
     @Override
     public boolean registerNewMemer(Person person) {
-        Memer memer=new Memer(person.getUserName(), person.getUserPassword(), null,
-                person.getEmailAddress(),person.getFirstName(), person.getSecondName(), "@"+person.getNickName(), person.getPhoneNumber(),person.getAccountStatus());
+        Memer memer=new Memer(person.getUserName(),
+                passwordEncoder.encode(person.getUserPassword()),
+                null, person.getEmailAddress(),
+                person.getFirstName(), person.getSecondName(),
+                "@"+person.getNickName(), person.getPhoneNumber(),
+                person.getAccountStatus(),person.getRole());
         Optional<Memer> memerOptional=Optional.ofNullable(repo.findByNickName(person.getNickName()));
         if (memerOptional.isEmpty()){
             repo.save(memer);

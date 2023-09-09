@@ -2,12 +2,11 @@ package com.memesKenya.meme.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.memesKenya.meme.model.User;
+import jakarta.persistence.*;
 import lombok.*;
-import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -67,9 +66,9 @@ public class Memer extends User {
    @ToString.Exclude
    private List<AdminMessage> adminMessages;
 
-   public Memer(String username,String password,byte[] userAvatar,String emailAddress,
-                String firstName,String lastName,String nickName,String phoneNumber,String accountStatus){
-      super(username,password,userAvatar,emailAddress,Timestamp.from(Instant.now()),firstName,lastName,accountStatus);
+   public Memer(String username, String password, byte[] userAvatar, String emailAddress,
+                String firstName, String lastName, String nickName, String phoneNumber, String accountStatus, String role){
+      super(username,password,userAvatar,emailAddress,Timestamp.from(Instant.now()),firstName,lastName,accountStatus,role);
       this.nickName=nickName;
       this.phoneNumber=phoneNumber;
    }

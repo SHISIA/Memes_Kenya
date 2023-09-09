@@ -4,7 +4,7 @@ import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
