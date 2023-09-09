@@ -20,4 +20,7 @@ public interface MemerRepo extends JpaRepository<Memer, UUID> {
 
     @Query("SELECT m FROM Memer m WHERE m.userName=?1 OR m.firstName=?1 OR m.secondName=?1")
     Memer findByAnyName(String name);
+
+    @Query("SELECT m FROM Memer m WHERE m.userName=?1")
+    Memer findByUserName(String name);
 }
