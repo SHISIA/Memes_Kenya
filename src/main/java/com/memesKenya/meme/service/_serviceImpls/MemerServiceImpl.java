@@ -22,7 +22,7 @@ public class MemerServiceImpl implements MemerService {
     private MemerRepo repo;
     @Override
     public List<Memer> getAllMemers() {
-        return repo.findAll();
+        return (List<Memer>) repo.findAll();
     }
 
     @Override

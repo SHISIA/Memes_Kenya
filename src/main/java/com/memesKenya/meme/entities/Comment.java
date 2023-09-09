@@ -7,7 +7,7 @@ import org.hibernate.annotations.Type;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
@@ -28,7 +28,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     @GenericGenerator(name = "uuid",strategy = "org.hibernate.id.UUIDGenerator")
-    @Type(type = "org.hibernate.type.UUIDCharType")
+//    @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID id;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
@@ -38,6 +38,10 @@ public class Comment {
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     @JoinColumn(name = "commentOwner",nullable = false,referencedColumnName = "user_Id")
     private Memer user;
+
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @JoinColumn(name = "AdminCommentOwner",nullable = false,referencedColumnName = "user_Id")
+    private Admin admin;
 
     @Column(
             name = "Contents",

@@ -4,11 +4,11 @@ import com.memesKenya.meme.entities.Memer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
-@Repository
 public interface MemerRepo extends JpaRepository<Memer, UUID> {
     @Query("select m from Memer m where m.nickName=?1")
     Memer findByNickName(String memerNickName);

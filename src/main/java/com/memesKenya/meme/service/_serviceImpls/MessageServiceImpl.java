@@ -26,7 +26,8 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public List<Message> getMessagesByNickName(String nickName) {
         Memer memer=memerRepo.findByNickName(nickName);
-        return repo.findBySender(memer.getUserId());
+//        return repo.findBySender(memer.getUserId());
+        return null;
     }
 
     @Override
@@ -34,7 +35,7 @@ public class MessageServiceImpl implements MessageService {
         Memer recipient=memerRepo.findById(message.getRecipient()).get();
         Memer sender=memerRepo.findById(message.getSender()).get();
         Message message_=new Message(sender,recipient,message.getMessage_content(), Timestamp.from(Instant.now()));
-        repo.save(message_);
+//        repo.save(message_);
 //        repo.updateSenderAndReceiver(sender.getUserId(),recipient.getUserId(),message_.getMessageId());
         return "Message Sent";
     }
@@ -46,14 +47,15 @@ public class MessageServiceImpl implements MessageService {
         UUID sender=memerRepo.findByNickName(nickName).getUserId();
         UUID receiverId=memerRepo.findByNickName(receiver).getUserId();
 
-        return repo.findBySender(sender,receiverId);
+//        return repo.findBySender(sender,receiverId);
+        return null;
     }
 
     @Override
     public List<Message> getMessageContaining(String content,String nickName) {
         UUID memerId=memerRepo.findByNickName(nickName).getUserId();
-        if (!(content.isBlank() && memerId.toString().isBlank()))
-        return repo.findMessageContaining(content,memerId);
+//        if (!(content.isBlank() && memerId.toString().isBlank()))
+//        return repo.findByMessageContaining(content,memerId);
         return null;
     }
 }

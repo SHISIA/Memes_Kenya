@@ -6,7 +6,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -22,14 +22,14 @@ import java.util.UUID;
 public class ChatRoom {
     @Id
     @Column(name = "room_id", nullable = false)
-    @Type(type = "org.hibernate.type.UUIDCharType")
+//    @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID roomId;
 
     @ManyToOne(fetch = FetchType.LAZY,targetEntity = Memer.class)
     private List<Memer> memers;
 
 
-    private HashMap<User,Message> roomMessages;
+//    private HashMap<User,Message> roomMessages;
 
     @Override
     public boolean equals(Object o) {

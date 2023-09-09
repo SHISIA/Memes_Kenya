@@ -7,7 +7,7 @@ import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
