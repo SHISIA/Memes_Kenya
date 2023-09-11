@@ -1,5 +1,6 @@
 package com.memesKenya.meme.entities;
 
+import com.memesKenya.meme.model.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
@@ -14,5 +15,5 @@ public class Authorities {
     private String username;
     private String authority;
     @OneToOne(mappedBy = "authorities")
-    private SecurityUser user;
+    private Memer user;
 }
