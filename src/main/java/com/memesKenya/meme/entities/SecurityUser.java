@@ -22,6 +22,9 @@ public class SecurityUser {
     private String password;
     private int enabled;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "username_id", referencedColumnName = "username")
+    @JoinColumn(name = "username",unique = true,referencedColumnName = "username")
     private Authorities authorities;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "username",unique = true,referencedColumnName = "username")
+    private Memer memer;
 }

@@ -7,21 +7,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
-import org.springframework.security.provisioning.UserDetailsManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
 
 @RestController
 @RequestMapping("api/v1/auth")
 public class AuthController {
     private static final Logger LOG= LoggerFactory.getLogger(AuthController.class);
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
 
-    public AuthController(AuthenticationManager authenticationManager, TokenService tokenService){
+    public AuthController(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, TokenService tokenService){
         this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
         this.tokenService=tokenService;
     }
 
@@ -30,8 +29,10 @@ public class AuthController {
         System.out.println("Username "+loginRequest.username()+" password "+loginRequest.password());
        Authentication authentication= authenticationManager.authenticate(
                new UsernamePasswordAuthenticationToken(
-            loginRequest.username(),loginRequest.password()
+            loginRequest.username(),
+                    loginRequest.password()
         ));
+        System.out.println("passed to here");
         return tokenService.generateToken(authentication);
     }
 

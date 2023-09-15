@@ -5,6 +5,7 @@ import com.memesKenya.meme.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -66,9 +67,12 @@ public class Memer extends User {
    @ToString.Exclude
    private List<AdminMessage> adminMessages;
 
+   @OneToOne(mappedBy = "memer")
+   private SecurityUser securityUser;
+
    public Memer(String username, String password, byte[] userAvatar, String emailAddress,
-                String firstName, String lastName, String nickName, String phoneNumber, String accountStatus, String role){
-      super(username,password,userAvatar,emailAddress,Timestamp.from(Instant.now()),firstName,lastName,accountStatus,role);
+                String firstName, String lastName, String nickName, String phoneNumber, String accountStatus){
+      super(username,password,userAvatar,emailAddress,Timestamp.from(Instant.now()),firstName,lastName,accountStatus);
       this.nickName=nickName;
       this.phoneNumber=phoneNumber;
    }
