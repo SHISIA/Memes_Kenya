@@ -88,9 +88,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf().disable()
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 //allow these requests to pass security
+                                new AntPathRequestMatcher("/api/v1/Memers/test"),
                                 new AntPathRequestMatcher("/api/v1/auth/authenticate"),
                                 new AntPathRequestMatcher("/api/v1/Memers/newMemer")
                         ).permitAll()
@@ -113,13 +115,6 @@ public class SecurityConfig {
                 ).build();
     }
 
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer() {
-//        return (web) -> web.ignoring().requestMatchers(
-//
-//        );
-//    }
-
     @Bean
     public DataSource dataSource() {
             DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
@@ -137,18 +132,17 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.checkOrigin("http://localhost:3000");
         configuration.setAllowedOrigins(List.of("http://localhost:3000"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-        configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
+        configuration.addAllowedHeader("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
     @Bean
-    @SuppressWarnings("deprecated")
+//    @SuppressWarnings("deprecated")
     public PasswordEncoder passwordEncoder() {
         String idForEncode = "scrypt";
         Map<String, PasswordEncoder> encoders = new HashMap<>();

@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -29,8 +31,10 @@ public class MemerController {
     }
 
     @GetMapping("/test")
-    public String testApiUnsecured(){
-        return "Test Successful";
+    public Map<String, String> testApiUnsecured(){
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Test Successful");
+        return response;
     }
     @PostMapping("/newMemer")
     public String newMemerAccount(@RequestBody Person person) {
