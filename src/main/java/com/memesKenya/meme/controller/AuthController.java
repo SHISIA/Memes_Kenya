@@ -10,6 +10,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("api/v1/auth")
 public class AuthController {
@@ -25,7 +28,7 @@ public class AuthController {
     }
 
     @PostMapping("/authenticate")
-    public String token(@RequestBody LoginRequest loginRequest){
+    public Map<String,String> token(@RequestBody LoginRequest loginRequest){
         System.out.println("Username "+loginRequest.username()+" password "+loginRequest.password());
        Authentication authentication= authenticationManager.authenticate(
                new UsernamePasswordAuthenticationToken(
@@ -33,7 +36,10 @@ public class AuthController {
                     loginRequest.password()
         ));
         System.out.println("passed to here");
-        return tokenService.generateToken(authentication);
+        String token = tokenService.generateToken(authentication);
+        Map<String,String> stringStringMap=new HashMap<>();
+        stringStringMap.put("token",token);
+        return stringStringMap;
     }
 
 }
