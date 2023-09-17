@@ -129,8 +129,7 @@ public class SecurityConfig {
         return source;
     }
 
-    @Bean
-//    @SuppressWarnings("deprecated")
+    @Bean//    @SuppressWarnings("deprecated")
     public PasswordEncoder passwordEncoder() {
         String idForEncode = "scrypt";
         Map<String, PasswordEncoder> encoders = new HashMap<>();
