@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 @AllArgsConstructor
-
+@Data
 public class Person{
 
     private String userName;
