@@ -8,7 +8,6 @@ import com.memesKenya.meme.repository.MessageRepo;
 import com.memesKenya.meme.service._service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -17,11 +16,10 @@ import java.util.UUID;
 
 @Service
 public class MessageServiceImpl implements MessageService {
-
     @Autowired
-    MessageRepo repo;
+    private MessageRepo repo;
     @Autowired
-    MemerRepo memerRepo;
+    private MemerRepo memerRepo;
 
     @Override
     public List<Message> getMessagesByNickName(String nickName) {
