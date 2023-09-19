@@ -1,7 +1,10 @@
 package com.memesKenya.meme.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Entity
@@ -9,6 +12,8 @@ import org.springframework.stereotype.Component;
 @Table(
         name = "users"
 )
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class SecurityUser {
     @Id
