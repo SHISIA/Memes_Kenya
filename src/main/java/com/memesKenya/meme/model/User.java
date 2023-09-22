@@ -19,7 +19,6 @@ import java.util.UUID;
 public class User {
     @Id
     @GeneratedValue (generator = "UUID",strategy = GenerationType.AUTO)
-    @GenericGenerator(name = "uuid",strategy = "org.hibernate.id.UUIDGenerator")
     @Column(
             name = "user_Id",
             nullable = false

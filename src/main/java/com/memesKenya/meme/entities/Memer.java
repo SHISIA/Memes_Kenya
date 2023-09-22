@@ -31,7 +31,7 @@ import java.util.Objects;
 public class Memer extends User {
    @Column(
            name = "phone_number",
-           nullable = false
+           nullable = true
    )
    private String phoneNumber;
 

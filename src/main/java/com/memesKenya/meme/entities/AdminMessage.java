@@ -25,7 +25,6 @@ public class AdminMessage {
             name = "unique_adminId",
             nullable = false
     )
-//    @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID messageId;
 
     @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)

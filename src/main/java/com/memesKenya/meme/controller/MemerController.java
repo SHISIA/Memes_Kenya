@@ -73,4 +73,8 @@ public class MemerController {
     public Memer getByAnyName(@PathVariable("text") String nameOrPhone){
         return service.getMemerByAnyName(nameOrPhone);
     }
+    @GetMapping("/logged")
+    public String logged(){
+        return "Congratulations!!! You are successfully logged in";
+    }
 }

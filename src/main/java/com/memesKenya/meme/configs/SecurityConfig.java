@@ -1,15 +1,19 @@
 package com.memesKenya.meme.configs;
 
+import com.memesKenya.meme.service.UserService;
+import com.memesKenya.meme.service._serviceImpls.MemerServiceImpl;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -17,7 +21,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
@@ -57,6 +61,9 @@ public class SecurityConfig {
 
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
+    @Autowired
+    @Lazy
+    private MemerServiceImpl userService;
 
     private final RsaKeyProperties rsaKeys;
 
@@ -74,7 +81,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .csrf().disable()
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
@@ -94,11 +101,17 @@ public class SecurityConfig {
 //                        .logoutSuccessUrl(LOGIN_URL + "?logout")
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout")))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                .oauth2ResourceServer(oauthServer -> oauthServer
+                        .jwt(Customizer.withDefaults()))
                 .exceptionHandling((ex)-> ex
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
                         .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
 
+                )
+                .oauth2Login(auth -> auth
+                                .successHandler(
+                                        (request, response, authentication) -> userService.processOAuthPostLogin(response,request,authentication)
+                                )
                 )
                 .build();
     }

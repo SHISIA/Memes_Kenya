@@ -1,11 +1,14 @@
 package com.memesKenya.meme.entities;
 
+import com.memesKenya.meme.model.Provider;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Entity
 @Component
@@ -17,6 +20,12 @@ import org.springframework.stereotype.Component;
 @Data
 public class SecurityUser {
     @Id
+    @GeneratedValue (generator = "UUID",strategy = GenerationType.AUTO)
+    @Column(
+            name = "user_Id",
+            nullable = false
+    )
+    private UUID userId;
     @Column(
             nullable = false
     )
@@ -25,11 +34,22 @@ public class SecurityUser {
             nullable = false
     )
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
     private int enabled;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "username",unique = true,referencedColumnName = "username")
+    @JoinColumn(name = "user_Id",unique = true,referencedColumnName = "user_Id")
     private Authorities authorities;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "username",unique = true,referencedColumnName = "username")
+    @JoinColumn(name = "user_Id",unique = true,referencedColumnName = "user_Id")
     private Memer memer;
+
+    public SecurityUser(String userName, String password, Provider provider, int enabled, Authorities authorities, Memer memer) {
+        this.username=userName;
+        this.password=password;
+        this.enabled=enabled;
+        this.provider=provider;
+        this.authorities=authorities;
+        this.memer=memer;
+    }
 }
