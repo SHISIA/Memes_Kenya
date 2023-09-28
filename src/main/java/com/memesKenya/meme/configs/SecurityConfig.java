@@ -1,6 +1,5 @@
 package com.memesKenya.meme.configs;
 
-import com.memesKenya.meme.service.UserService;
 import com.memesKenya.meme.service._serviceImpls.MemerServiceImpl;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -88,7 +87,9 @@ public class SecurityConfig {
                                 //allow these requests to pass security
                                 new AntPathRequestMatcher("/api/v1/Memers/test"),
                                 new AntPathRequestMatcher("/api/v1/auth/authenticate"),
-                                new AntPathRequestMatcher("/api/v1/Memers/newMemer")
+                                new AntPathRequestMatcher("/api/v1/Memers/newMemer"),
+                                new AntPathRequestMatcher("/api/v1/auth/getAuthToken"),
+                                new AntPathRequestMatcher("/api/v1/auth/logged")
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -106,18 +107,17 @@ public class SecurityConfig {
                 .exceptionHandling((ex)-> ex
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
                         .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
-
                 )
                 .oauth2Login(auth -> auth
                                 .successHandler(
-                                        (request, response, authentication) -> userService.processOAuthPostLogin(response,request,authentication)
-                                )
-                )
+                                        (request, response, authentication) ->
+                                        userService.processOAuthPostLogin(response,request,authentication)
+                                ))
                 .build();
     }
 
     @Bean
-    public DataSource dataSource() {
+    public DataSource dataSource(){
             DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
             dataSourceBuilder.url(jdbcUrl);
             dataSourceBuilder.driverClassName(driverClassName);
@@ -133,7 +133,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000","http://192.168.88.232:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000","http://192.168.100.211:3000"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowCredentials(true);
         configuration.addAllowedHeader("*");
@@ -142,7 +142,7 @@ public class SecurityConfig {
         return source;
     }
 
-    @Bean//    @SuppressWarnings("deprecated")
+    @Bean
     public PasswordEncoder passwordEncoder() {
         String idForEncode = "scrypt";
         Map<String, PasswordEncoder> encoders = new HashMap<>();
