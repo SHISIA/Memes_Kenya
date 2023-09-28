@@ -91,12 +91,4 @@ public class UserService {
         response.sendRedirect("/api/v1/Memers/logged");
 
     }
-
-//    public void authenticate(){
-//        Authentication authentication= authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        loginRequest.username(),
-//                        loginRequest.password()
-//                ));
-//    }
 }
