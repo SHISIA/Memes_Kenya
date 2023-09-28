@@ -37,6 +37,7 @@ public class SecurityUser {
     @Enumerated(EnumType.STRING)
     private Provider provider;
     private int enabled;
+    private String sub_Id;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_Id",unique = true,referencedColumnName = "user_Id")
     private Authorities authorities;
@@ -44,11 +45,12 @@ public class SecurityUser {
     @JoinColumn(name = "user_Id",unique = true,referencedColumnName = "user_Id")
     private Memer memer;
 
-    public SecurityUser(String userName, String password, Provider provider, int enabled, Authorities authorities, Memer memer) {
+    public SecurityUser(String userName, String password, Provider provider, int enabled, String sub_Id,Authorities authorities, Memer memer) {
         this.username=userName;
         this.password=password;
         this.enabled=enabled;
         this.provider=provider;
+        this.sub_Id=sub_Id;
         this.authorities=authorities;
         this.memer=memer;
     }
