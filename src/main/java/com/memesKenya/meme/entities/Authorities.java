@@ -1,10 +1,10 @@
 package com.memesKenya.meme.entities;
 
-import com.memesKenya.meme.model.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
@@ -13,6 +13,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Component
 public class Authorities {
     @Id
     @GeneratedValue
