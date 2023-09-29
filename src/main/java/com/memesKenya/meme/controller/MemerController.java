@@ -3,13 +3,17 @@ package com.memesKenya.meme.controller;
 import com.memesKenya.meme.entities.Memer;
 import com.memesKenya.meme.model.Person;
 import com.memesKenya.meme.service._service.MemerService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,13 +29,19 @@ import java.util.UUID;
 public class MemerController {
     @Autowired
     private MemerService service;
+
     @GetMapping("/allMemers")
     public List<Memer> getAllMemers(){
         return service.getAllMemers();
     }
 
+    @GetMapping("/loggedOut")
+    public String loggedOut(){
+        return "Successfully Logged Out";
+    }
+
     @GetMapping("/test")
-    public Map<String, String> testApiUnsecured(){
+    public Map<String, String> testApiUnsecured(HttpSession session){
         Map<String, String> response = new HashMap<>();
         response.put("message", "Test Successful");
         return response;
@@ -58,7 +68,8 @@ public class MemerController {
                 .header(HttpHeaders.CONTENT_DISPOSITION,
                         "mediaPost; filename=\""
                                 + memer.getUserId()+"\""
-                ).body(new ByteArrayResource(memer.getUserAvatar()));
+                )
+                .body(new ByteArrayResource(memer.getUserAvatar()));
     }
 
     @GetMapping("/getMemerByNickName/{nick}")
@@ -75,6 +86,17 @@ public class MemerController {
     }
     @GetMapping("/logged")
     public String logged(){
-        return "Congratulations!!! You are successfully logged in";
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email="";
+        if (authentication != null) {
+            // Retrieve user details
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof OAuth2User){
+               email= ((OAuth2User) principal).getAttribute("email");
+            }else{
+               email= ((DefaultOidcUser) principal).getAttribute("email");
+            }
+        }
+        return "Congratulations, "+ email+"!!! You are successfully logged in";
     }
 }
