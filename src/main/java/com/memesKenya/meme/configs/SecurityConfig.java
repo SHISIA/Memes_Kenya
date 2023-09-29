@@ -7,14 +7,13 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.RememberMeAuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -34,7 +33,10 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthen
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.session.Session;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -48,7 +50,7 @@ import java.util.Map;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig {
+public class SecurityConfig<S extends Session> {
     @Value("${spring.datasource.url}")
     private String jdbcUrl;
 
@@ -60,11 +62,10 @@ public class SecurityConfig {
 
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
-    @Autowired
-    @Lazy
-    private MemerServiceImpl userService;
 
     private final RsaKeyProperties rsaKeys;
+
+    private static final String tokenBasedRememberMeKey="MemesKenya-Key";
 
     public SecurityConfig(RsaKeyProperties rsaKeys) {
         this.rsaKeys = rsaKeys;
@@ -78,42 +79,76 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           TokenBasedRememberMeServices rememberMeServices,
+                                           MemerServiceImpl userService
+    ) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 //allow these requests to pass security
-                                new AntPathRequestMatcher("/api/v1/Memers/test"),
+//                                new AntPathRequestMatcher("/api/v1/Memers/test"),
                                 new AntPathRequestMatcher("/api/v1/auth/authenticate"),
                                 new AntPathRequestMatcher("/api/v1/Memers/newMemer"),
-                                new AntPathRequestMatcher("/api/v1/auth/getAuthToken"),
-                                new AntPathRequestMatcher("/api/v1/auth/logged")
+                                new AntPathRequestMatcher("/api/v1/Memers/loggedOut")
+//                                new AntPathRequestMatcher("/api/v1/auth/logged"),
+//                                new AntPathRequestMatcher("/api/v1/Memers/logged")
+
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
-
                 .logout(
                 logout -> logout
                         .logoutUrl("/logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
-//                        .logoutSuccessUrl(LOGIN_URL + "?logout")
+                        .logoutSuccessUrl("/api/v1/Memers/loggedOut")
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout")))
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
+
                 .oauth2ResourceServer(oauthServer -> oauthServer
                         .jwt(Customizer.withDefaults()))
                 .exceptionHandling((ex)-> ex
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
                         .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
                 )
+                //oauth2 set up
                 .oauth2Login(auth -> auth
                                 .successHandler(
                                         (request, response, authentication) ->
-                                        userService.processOAuthPostLogin(response,request,authentication)
+                                        {
+                                            userService.processOAuthPostLogin(request,authentication);
+                                                    response.sendRedirect("/api/v1/Memers/logged");
+                                        }
                                 ))
+                //remember me settings
+                .rememberMe((rememberMe) -> rememberMe
+                        .rememberMeServices(rememberMeServices))
+
                 .build();
+    }
+
+    @Bean
+    RememberMeAuthenticationFilter rememberMeFilter(TokenBasedRememberMeServices rememberMeServices,AuthenticationManager authenticationManager) {
+        RememberMeAuthenticationFilter rememberMeFilter =
+                new RememberMeAuthenticationFilter(authenticationManager,rememberMeServices);
+        return rememberMeFilter;
+    }
+
+    @Bean
+    TokenBasedRememberMeServices rememberMeServices(UserDetailsService userDetailsService) {
+        TokenBasedRememberMeServices rememberMeServices =
+                new TokenBasedRememberMeServices("MemesKenya-Key",userDetailsService,
+                        TokenBasedRememberMeServices.RememberMeTokenAlgorithm.SHA256);
+        return rememberMeServices;
+    }
+
+    @Bean
+    RememberMeAuthenticationProvider rememberMeAuthenticationProvider() {
+        return new RememberMeAuthenticationProvider(tokenBasedRememberMeKey);
     }
 
     @Bean
