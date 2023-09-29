@@ -1,5 +1,6 @@
 package com.memesKenya.meme.controller;
 
+import com.memesKenya.meme.Active.LoggedOauthUser;
 import com.memesKenya.meme.entities.Memer;
 import com.memesKenya.meme.model.Person;
 import com.memesKenya.meme.service._service.MemerService;
@@ -84,19 +85,28 @@ public class MemerController {
     public Memer getByAnyName(@PathVariable("text") String nameOrPhone){
         return service.getMemerByAnyName(nameOrPhone);
     }
+
     @GetMapping("/logged")
     public String logged(){
+        return "Congratulations, Email: "+processDetails().getEmail() +" Password : "+
+                processDetails().getPassword()
+                +" !!! You are successfully logged in";
+    }
+
+    public LoggedOauthUser processDetails(){
+        String email = "",password = "";
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email="";
         if (authentication != null) {
             // Retrieve user details
             Object principal = authentication.getPrincipal();
             if (principal instanceof OAuth2User){
-               email= ((OAuth2User) principal).getAttribute("email");
+                email= ((OAuth2User) principal).getAttribute("email");
+                password= ((OAuth2User) principal).getAttribute("sub");
             }else{
-               email= ((DefaultOidcUser) principal).getAttribute("email");
+                email= ((DefaultOidcUser) principal).getAttribute("email");
+                password= ((DefaultOidcUser) principal).getAttribute("sub");
             }
         }
-        return "Congratulations, "+ email+"!!! You are successfully logged in";
+        return LoggedOauthUser.builder().email(email).password(password).build();
     }
 }
