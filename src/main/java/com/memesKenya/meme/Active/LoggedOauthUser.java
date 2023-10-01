@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @ToString
 public class LoggedOauthUser {
-    private String email;
-    private String password;
+    private String userId;
+    private String nickName;
+    private String image;
 }
