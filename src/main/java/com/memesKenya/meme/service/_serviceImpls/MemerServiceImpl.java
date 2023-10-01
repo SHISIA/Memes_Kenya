@@ -94,12 +94,17 @@ public class MemerServiceImpl implements MemerService {
     }
 
     @Override
-    @Transactional
-    public String changeMemerAvatar(Memer memer,MultipartFile avatar) throws IOException {
-        if (!(Objects.equals(avatar.getContentType(), "image/png") ||Objects.equals(avatar.getContentType(), "image/jpeg"))){
-            return "Cannot use "+avatar.getContentType()+" for your picture handle";
+    public SecurityUser findBySubId(@NonNull String subId) {
+        if (!subId.isBlank()){
+            return securityUserRepo.findBySubId(subId);
         }
-         repo.changeMemerAvatar(memer.getUserId(),avatar.getBytes());
+        return null;
+    }
+
+    @Override
+    @Transactional
+    public String changeMemerAvatar(Memer memer,String avatar) {
+         repo.changeMemerAvatar(memer.getUserId(),avatar);
          return "Updated "+memer.getNickName()+"'s Profile pic Successfully";
     }
 
@@ -113,7 +118,7 @@ public class MemerServiceImpl implements MemerService {
         return repo.findByAnyName(name);
     }
 
-    public void processOAuthPostLogin(HttpServletRequest request, Authentication authentication) throws IOException {
+    public SecurityUser processOAuthPostLogin(HttpServletRequest request, Authentication authentication) throws IOException {
         OAuth2User oauthUser;
         String email = "",picture="",first_name="",sub="",last_name="";
         Provider provider=GOOGLE;
@@ -146,6 +151,7 @@ public class MemerServiceImpl implements MemerService {
         }else{
             System.out.println("extra");
         }
+        SecurityUser user;
 
         //find out if the user exists
         SecurityUser existUser=securityUserRepo.findByUsername(email);
@@ -154,7 +160,7 @@ public class MemerServiceImpl implements MemerService {
             //create a new memer
             Memer memer = new Memer(email,passwordEncoder.encode(sub),
                     //convert image to a byte array for a database
-                    ImageToByteArrayConvertor.convert(picture),
+                    picture,
                     email,first_name,last_name,"@"+last_name,
                     null, AccountStatus.ACTIVE.name());
             //create a new security user for Spring Security login purposes (Login table)
@@ -167,7 +173,11 @@ public class MemerServiceImpl implements MemerService {
             newUser.setMemer(memer);
             newUser.setEnabled(1);
             securityUserRepo.save(newUser);
+            user=newUser;
+        }else {
+            return existUser;
         }
+        return user;
     }
 
 }
