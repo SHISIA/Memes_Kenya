@@ -1,5 +1,6 @@
 package com.memesKenya.meme.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.memesKenya.meme.model.Provider;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -42,7 +43,8 @@ public class SecurityUser {
     @JoinColumn(name = "user_Id",unique = true,referencedColumnName = "user_Id")
     private Authorities authorities;
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_Id",unique = true,referencedColumnName = "user_Id")
+    @JoinColumn(unique = true,referencedColumnName = "email_address")
+    @JsonBackReference
     private Memer memer;
 
     public SecurityUser(String userName, String password, Provider provider, int enabled, String sub_Id,Authorities authorities, Memer memer) {
