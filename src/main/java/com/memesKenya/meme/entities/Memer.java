@@ -5,7 +5,6 @@ import com.memesKenya.meme.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -54,6 +53,7 @@ public class Memer extends User {
 
    @OneToMany(fetch = FetchType.LAZY,mappedBy = "memer")
    @ToString.Exclude
+   @JsonManagedReference
    private List<MediaPost> posts;
 
    @ManyToOne(fetch = FetchType.LAZY,targetEntity = ChatRoom.class)
@@ -68,9 +68,10 @@ public class Memer extends User {
    private List<AdminMessage> adminMessages;
 
    @OneToOne(mappedBy = "memer")
+   @JsonManagedReference
    private SecurityUser securityUser;
 
-   public Memer(String username, String password, byte[] userAvatar, String emailAddress,
+   public Memer(String username, String password, String userAvatar, String emailAddress,
                 String firstName, String lastName, String nickName, String phoneNumber, String accountStatus){
       super(username,password,userAvatar,emailAddress,Timestamp.from(Instant.now()),firstName,lastName,accountStatus);
       this.nickName=nickName;
