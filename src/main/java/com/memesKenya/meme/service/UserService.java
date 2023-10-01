@@ -4,7 +4,6 @@ import com.memesKenya.meme.entities.AccountStatus;
 import com.memesKenya.meme.entities.Authorities;
 import com.memesKenya.meme.entities.Memer;
 import com.memesKenya.meme.entities.SecurityUser;
-import com.memesKenya.meme.model.ImageToByteArrayConvertor;
 import com.memesKenya.meme.model.Provider;
 import com.memesKenya.meme.repository.SecurityUserRepo;
 import jakarta.servlet.http.HttpServletRequest;
@@ -73,7 +72,7 @@ public class UserService {
             //create a new memer
             Memer memer = new Memer(email,first_name+last_name+randInt,
                     //convert image to a byte array for a database
-                    ImageToByteArrayConvertor.convert(picture),
+                    picture,
                     email,first_name,last_name,"@"+last_name,
                     null, AccountStatus.ACTIVE.name());
             //create a new security user for Spring Security login purposes (Login table)
@@ -91,4 +90,5 @@ public class UserService {
         response.sendRedirect("/api/v1/Memers/logged");
 
     }
+
 }

@@ -16,7 +16,7 @@ public interface MemerRepo extends JpaRepository<Memer, UUID> {
 
     @Modifying
     @Query("UPDATE Memer m SET m.userAvatar=?2 WHERE m.userId=?1")
-    void changeMemerAvatar(UUID memerId,byte[] avatar);
+    void changeMemerAvatar(UUID memerId,String avatar);
 
     @Query("SELECT m FROM Memer m WHERE m.userName=?1 OR m.firstName=?1 OR m.secondName=?1")
     Memer findByAnyName(String name);

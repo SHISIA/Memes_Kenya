@@ -38,8 +38,8 @@ public class User {
     @Column(
             name = "avatar_path"
     )
-    @Lob
-    private byte[] userAvatar;
+//    @Lob
+    private String userAvatar;
     @Column(
             name = "email_address",
             nullable = false,
@@ -53,7 +53,7 @@ public class User {
     private String firstName;
     private String secondName;
     private String accountStatus;
-    public User(String username, String password, byte[] userAvatar, String emailAddress,Timestamp lastLoginTime, String firstName, String lastName,
+    public User(String username, String password, String userAvatar, String emailAddress,Timestamp lastLoginTime, String firstName, String lastName,
                 String accountStatus) {
         this.userName=username;
         this.userPassword=password;

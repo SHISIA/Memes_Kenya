@@ -1,7 +1,7 @@
 package com.memesKenya.meme.controller;
 
-import com.memesKenya.meme.Active.LoggedOauthUser;
 import com.memesKenya.meme.entities.Memer;
+import com.memesKenya.meme.entities.SecurityUser;
 import com.memesKenya.meme.model.Person;
 import com.memesKenya.meme.service._service.MemerService;
 import jakarta.servlet.http.HttpSession;
@@ -11,15 +11,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,24 +52,24 @@ public class MemerController {
                 : "Error creating user. Try again";
     }
 
-    @PutMapping("/changeAvatar/{id}")
+    @PutMapping("/changeAvatar/{id}/{link}")
     public String changeAvatar(@PathVariable("id") UUID memerId,
-                               @RequestParam("file") MultipartFile file) throws IOException {
+                               @PathVariable("link") String hostedLink) throws IOException {
         Memer memer=service.findById(memerId);
-        return service.changeMemerAvatar(memer,file);
+        return service.changeMemerAvatar(memer,hostedLink);
     }
 
-    @GetMapping("/viewAvatar/{fileId}")
-    public ResponseEntity<Resource> viewAvatar(@PathVariable UUID fileId) {
-        Memer memer = service.findById(fileId);
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType("image/png"))
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "mediaPost; filename=\""
-                                + memer.getUserId()+"\""
-                )
-                .body(new ByteArrayResource(memer.getUserAvatar()));
-    }
+//    @GetMapping("/viewAvatar/{fileId}")
+//    public ResponseEntity<Resource> viewAvatar(@PathVariable UUID fileId) {
+//        Memer memer = service.findById(fileId);
+//        return ResponseEntity.ok()
+//                .contentType(MediaType.parseMediaType("image/png"))
+//                .header(HttpHeaders.CONTENT_DISPOSITION,
+//                        "mediaPost; filename=\""
+//                                + memer.getUserId()+"\""
+//                )
+//                .body(new ByteArrayResource(memer.getUserAvatar()));
+//    }
 
     @GetMapping("/getMemerByNickName/{nick}")
     public Memer getByNickName(@PathVariable("nick") @Validated String nickName){
@@ -86,27 +84,13 @@ public class MemerController {
         return service.getMemerByAnyName(nameOrPhone);
     }
 
-    @GetMapping("/logged")
-    public String logged(){
-        return "Congratulations, Email: "+processDetails().getEmail() +" Password : "+
-                processDetails().getPassword()
-                +" !!! You are successfully logged in";
+    @GetMapping("/storeData")
+    public String storeData(Principal principal) {
+        return principal.getName();
     }
 
-    public LoggedOauthUser processDetails(){
-        String email = "",password = "";
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            // Retrieve user details
-            Object principal = authentication.getPrincipal();
-            if (principal instanceof OAuth2User){
-                email= ((OAuth2User) principal).getAttribute("email");
-                password= ((OAuth2User) principal).getAttribute("sub");
-            }else{
-                email= ((DefaultOidcUser) principal).getAttribute("email");
-                password= ((DefaultOidcUser) principal).getAttribute("sub");
-            }
-        }
-        return LoggedOauthUser.builder().email(email).password(password).build();
+    @GetMapping("/data/{id}")
+    public SecurityUser getSecUser(@PathVariable("id") String userId){
+        return service.findBySubId(userId);
     }
 }
