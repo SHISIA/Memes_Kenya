@@ -1,5 +1,6 @@
 package com.memesKenya.meme.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.memesKenya.meme.model.Post;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -38,18 +39,18 @@ public class MediaPost extends Post {
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
-    @JoinColumn(
-            name = "PostOwner"
-    )
+    @JoinColumn(name = "user_Id",unique = true,referencedColumnName = "user_Id")
+    @JsonBackReference
     private  Memer memer;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "post")
     private List<Comment> comments;
 
-    public MediaPost(String title, double mediaSize, String imageType, byte[] imageData){
+    public MediaPost(String title, double mediaSize, String imageType, byte[] imageData,Memer owner){
         super(title,Timestamp.from(Instant.now()),0,0,0,0,mediaSize);
         this.imageType=imageType;
         this.imageData=imageData;
+        this.memer=owner;
     }
 
 }

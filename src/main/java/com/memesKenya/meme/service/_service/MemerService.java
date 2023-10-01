@@ -1,6 +1,7 @@
 package com.memesKenya.meme.service._service;
 
 import com.memesKenya.meme.entities.Memer;
+import com.memesKenya.meme.entities.SecurityUser;
 import com.memesKenya.meme.model.Person;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,9 +17,11 @@ public interface MemerService {
 
     Memer getMemerByNickName(String memerAnyNameOrPhone);
 
-    String changeMemerAvatar(Memer memer,MultipartFile avatar) throws IOException;
+    String changeMemerAvatar(Memer memer,String avatar) throws IOException;
 
     Memer findById(UUID memerId);
 
     Memer getMemerByAnyName(String nameOrPhone);
+
+     SecurityUser findBySubId(String subId);
 }

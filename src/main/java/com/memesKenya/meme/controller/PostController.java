@@ -17,22 +17,23 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @RestController
 public class PostController {
     @Autowired
     private PostService postService;
 
-    @PostMapping("/upload")
-    public String  uploadImageFile(@RequestParam("file") MultipartFile file) throws Exception {
+    @PostMapping("/upload/{uuid}/{description}")
+    public String  uploadImageFile(@RequestParam("file") MultipartFile file,
+                                   @PathVariable String uuid,
+                                   @PathVariable String description) throws Exception {
         List<String> list= List.of(".jpg",".png",".jpeg",".webp",".ico",".jfif");
         if (list.stream().noneMatch(Objects.requireNonNull(file.getOriginalFilename()).toLowerCase()::endsWith)){
             return "This file format currently is not allowed";
         }
-        MediaPost mediaPost =null;
-        String downloadURL="";
-        mediaPost = postService.upload(file);
+        MediaPost mediaPost;
+        String downloadURL;
+        mediaPost = postService.upload(file,uuid,description);
         downloadURL= ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/download/")
                 .path(mediaPost.getPostId().toString())

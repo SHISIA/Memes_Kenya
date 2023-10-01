@@ -9,4 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface SecurityUserRepo extends JpaRepository<SecurityUser, String> {
 //    @Query("SELECT u FROM User u WHERE u.username = :username")
     SecurityUser findByUsername(String username);
+
+    @Query("SELECT s FROM SecurityUser s WHERE s.sub_Id=?1")
+    SecurityUser findBySubId(String subId);
 }

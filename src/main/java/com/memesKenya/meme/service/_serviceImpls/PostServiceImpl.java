@@ -3,6 +3,7 @@ package com.memesKenya.meme.service._serviceImpls;
 import com.memesKenya.meme.Exceptions.PostNotFoundException;
 import com.memesKenya.meme.entities.MediaPost;
 import com.memesKenya.meme.entities.Memer;
+import com.memesKenya.meme.repository.MemerRepo;
 import com.memesKenya.meme.repository.PostRepo;
 import com.memesKenya.meme.service._service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -21,14 +23,18 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private PostRepo repo;
+    @Autowired
+    MemerRepo memerRepo;
 
     @Override
-    public MediaPost upload(MultipartFile file) throws Exception {
+    public MediaPost upload(MultipartFile file,String userId,String description) throws Exception {
+        Optional<Memer> memerRes = memerRepo.findById(UUID.fromString(userId));
         String fileName= StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         if (fileName.contains("..")){
             throw new Exception("Cannot find file specified");
         }
-        MediaPost image=new MediaPost(fileName,file.getSize(),file.getContentType(),file.getBytes());
+        MediaPost image=new MediaPost(description,file.getSize(),file.getContentType(),file.getBytes(),
+                memerRes.get());
         return repo.save(image);
     }
 
