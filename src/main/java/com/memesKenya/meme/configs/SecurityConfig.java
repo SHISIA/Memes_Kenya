@@ -1,5 +1,7 @@
 package com.memesKenya.meme.configs;
 
+import com.memesKenya.meme.entities.SecurityUser;
+import com.memesKenya.meme.service.TokenService;
 import com.memesKenya.meme.service._serviceImpls.MemerServiceImpl;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -7,13 +9,18 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.RememberMeAuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -21,6 +28,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.*;
@@ -63,6 +71,11 @@ public class SecurityConfig<S extends Session> {
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
 
+    public static final String ipUrl="http://192.168.100.211:3000",
+    reactUrl="http://localhost:3000",
+            shortIp="http://192.168.100.211:8082",
+    currentUrl="http://localhost:8082";
+
     private final RsaKeyProperties rsaKeys;
 
     private static final String tokenBasedRememberMeKey="MemesKenya-Key";
@@ -78,11 +91,12 @@ public class SecurityConfig<S extends Session> {
         return new ProviderManager(authProvider);
     }
 
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
                                            TokenBasedRememberMeServices rememberMeServices,
                                            MemerServiceImpl userService
-    ) throws Exception {
+                                           ) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
@@ -92,10 +106,9 @@ public class SecurityConfig<S extends Session> {
 //                                new AntPathRequestMatcher("/api/v1/Memers/test"),
                                 new AntPathRequestMatcher("/api/v1/auth/authenticate"),
                                 new AntPathRequestMatcher("/api/v1/Memers/newMemer"),
-                                new AntPathRequestMatcher("/api/v1/Memers/loggedOut")
-//                                new AntPathRequestMatcher("/api/v1/auth/logged"),
-//                                new AntPathRequestMatcher("/api/v1/Memers/logged")
-
+                                new AntPathRequestMatcher("/api/v1/Memers/loggedOut"),
+                                new AntPathRequestMatcher("/api/v1/Memers/storeData"),
+                                new AntPathRequestMatcher("/api/v1/Memers/logged")
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -120,8 +133,15 @@ public class SecurityConfig<S extends Session> {
                                 .successHandler(
                                         (request, response, authentication) ->
                                         {
-                                            userService.processOAuthPostLogin(request,authentication);
-                                                    response.sendRedirect("/api/v1/Memers/logged");
+                                           SecurityUser user= userService.processOAuthPostLogin(request,authentication);
+                                            System.out.println("sub Id "+user.getSub_Id());
+                                            response.sendRedirect(ipUrl+"/home?"+
+                                                    user.getSub_Id() +
+                                                            "mmerz"
+                                                            +
+                                                    getToken(user.getUsername(),user.getSub_Id())
+//                                                    +user.getSub_Id()
+                                            );
                                         }
                                 ))
                 //remember me settings
@@ -129,6 +149,22 @@ public class SecurityConfig<S extends Session> {
                         .rememberMeServices(rememberMeServices))
 
                 .build();
+    }
+
+    @Autowired
+    @Lazy
+    TokenService tokenService;
+    @Autowired
+    @Lazy
+    AuthenticationManager authenticationManager;
+
+    public String getToken(String username,String password){
+        Authentication authentication= authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        username,
+                        password
+                ));
+        return tokenService.generateToken(authentication);
     }
 
     @Bean
@@ -168,7 +204,7 @@ public class SecurityConfig<S extends Session> {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000","http://192.168.100.211:3000"));
+        configuration.setAllowedOrigins(List.of(reactUrl,ipUrl,shortIp,currentUrl));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowCredentials(true);
         configuration.addAllowedHeader("*");
