@@ -1,5 +1,6 @@
 package com.memesKenya.meme.controller;
 
+import com.memesKenya.meme.Active.LoggedOauthUser;
 import com.memesKenya.meme.entities.Memer;
 import com.memesKenya.meme.entities.SecurityUser;
 import com.memesKenya.meme.model.Person;
@@ -18,10 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/Memers")
@@ -90,7 +88,17 @@ public class MemerController {
     }
 
     @GetMapping("/data/{id}")
-    public SecurityUser getSecUser(@PathVariable("id") String userId){
-        return service.findBySubId(userId);
+    public LoggedOauthUser getActiveLoggedUser(@PathVariable("id") String userId){
+        Optional<SecurityUser> securityUser= Optional.ofNullable(service.findBySubId(userId));
+        if (securityUser.isEmpty()){
+            return null;
+        }
+        Memer memer = service.findByUsername(securityUser.get().getUsername());
+        System.out.println("Data sent!!!");
+        return  LoggedOauthUser.builder()
+                .userId(String.valueOf(memer.getUserId()))
+                .image(memer.getUserAvatar())
+                .nickName(memer.getNickName())
+                .build();
     }
 }
