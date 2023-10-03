@@ -79,7 +79,7 @@ public class PostController {
         return postService.postOwner(postOwner,postId);
     }
 
-    @GetMapping
+    @GetMapping("/posts")
     public Page<MediaPost> getPosts(@RequestParam int page,@RequestParam int size){
         PageRequest pageRequest=PageRequest.of(page,size);
         return postService.getPosts(pageRequest);

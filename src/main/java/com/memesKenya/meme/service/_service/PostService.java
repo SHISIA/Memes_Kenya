@@ -12,8 +12,6 @@ import java.util.UUID;
 public interface PostService {
     MediaPost upload(MultipartFile file,String userId,String description) throws Exception;
 
-
-
     MediaPost findPostByUUID(UUID postId) throws PostNotFoundException;
 
     int like(UUID postId) throws Exception;
