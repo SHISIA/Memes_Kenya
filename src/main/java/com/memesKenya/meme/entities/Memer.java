@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -29,8 +30,7 @@ import java.util.Objects;
                 })
 public class Memer extends User {
    @Column(
-           name = "phone_number",
-           nullable = true
+           name = "phone_number"
    )
    private String phoneNumber;
 
@@ -71,9 +71,9 @@ public class Memer extends User {
    @JsonManagedReference
    private SecurityUser securityUser;
 
-   public Memer(String username, String password, String userAvatar, String emailAddress,
+   public Memer(UUID userId,String username, String password, String userAvatar, String emailAddress,
                 String firstName, String lastName, String nickName, String phoneNumber, String accountStatus){
-      super(username,password,userAvatar,emailAddress,Timestamp.from(Instant.now()),firstName,lastName,accountStatus);
+      super(userId,username,password,userAvatar,emailAddress,Timestamp.from(Instant.now()),firstName,lastName,accountStatus);
       this.nickName=nickName;
       this.phoneNumber=phoneNumber;
    }
