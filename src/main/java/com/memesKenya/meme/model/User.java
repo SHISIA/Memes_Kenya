@@ -18,7 +18,7 @@ import java.util.UUID;
 @MappedSuperclass
 public class User {
     @Id
-    @GeneratedValue (generator = "UUID",strategy = GenerationType.AUTO)
+//    @GeneratedValue (generator = "UUID",strategy = GenerationType.AUTO)
     @Column(
             name = "user_Id",
             nullable = false
@@ -53,15 +53,16 @@ public class User {
     private String firstName;
     private String secondName;
     private String accountStatus;
-    public User(String username, String password, String userAvatar, String emailAddress,Timestamp lastLoginTime, String firstName, String lastName,
-                String accountStatus) {
-        this.userName=username;
-        this.userPassword=password;
-        this.userAvatar=userAvatar;
-        this.emailAddress=emailAddress;
-        this.lastLoginTime=lastLoginTime;
-        this.firstName=firstName;
-        this.secondName=lastName;
-        this.accountStatus=accountStatus;
-    }
+//    public User(UUID userId,String username, String password, String userAvatar, String emailAddress,Timestamp lastLoginTime, String firstName, String lastName,
+//                String accountStatus) {
+//        this.userName=username;
+//        this.userId=userId;
+//        this.userPassword=password;
+//        this.userAvatar=userAvatar;
+//        this.emailAddress=emailAddress;
+//        this.lastLoginTime=lastLoginTime;
+//        this.firstName=firstName;
+//        this.secondName=lastName;
+//        this.accountStatus=accountStatus;
+//    }
 }
