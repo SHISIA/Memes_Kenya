@@ -64,14 +64,15 @@ public class MemerServiceImpl implements MemerService {
 
     @Override
     public boolean registerNewMemer(Person person) {
-         memer=new Memer(person.getUserName(),
+        UUID uuid=UUID.randomUUID();
+         memer=new Memer(uuid,person.getUserName(),
                 passwordEncoder.encode(person.getUserPassword()),
                 null, person.getEmailAddress(),
                 person.getFirstName(), person.getSecondName(),
                 "@"+person.getNickName(), person.getPhoneNumber(),
                 person.getAccountStatus());
          authorities=new Authorities(person.getUserName(),"ROLE_USER",user);
-         user=new SecurityUser(person.getUserName(), passwordEncoder.encode(person.getUserPassword()),Provider.GOOGLE,
+         user=new SecurityUser(memer.getUserId(),person.getUserName(), passwordEncoder.encode(person.getUserPassword()),Provider.GOOGLE,
                 1,"NON-OATH2.0", authorities,memer
          );
 
@@ -102,6 +103,11 @@ public class MemerServiceImpl implements MemerService {
     }
 
     @Override
+    public Memer findByUsername(String username) {
+        return repo.findByUserName(username);
+    }
+
+    @Override
     @Transactional
     public String changeMemerAvatar(Memer memer,String avatar) {
          repo.changeMemerAvatar(memer.getUserId(),avatar);
@@ -120,6 +126,7 @@ public class MemerServiceImpl implements MemerService {
 
     public SecurityUser processOAuthPostLogin(HttpServletRequest request, Authentication authentication) throws IOException {
         OAuth2User oauthUser;
+        UUID uuid = UUID.randomUUID();
         String email = "",picture="",first_name="",sub="",last_name="";
         Provider provider=GOOGLE;
         if (request.getRequestURI().endsWith("google")){
@@ -158,13 +165,14 @@ public class MemerServiceImpl implements MemerService {
         //create a new user since he/she doesn't exist
         if (existUser == null) {
             //create a new memer
-            Memer memer = new Memer(email,passwordEncoder.encode(sub),
+            Memer memer = new Memer(uuid,email,passwordEncoder.encode(sub),
                     //convert image to a byte array for a database
                     picture,
                     email,first_name,last_name,"@"+last_name,
                     null, AccountStatus.ACTIVE.name());
             //create a new security user for Spring Security login purposes (Login table)
             SecurityUser newUser = new SecurityUser();
+            newUser.setUserId(memer.getUserId());
             newUser.setUsername(email);
             newUser.setPassword(passwordEncoder.encode(sub));
             newUser.setProvider(provider);
