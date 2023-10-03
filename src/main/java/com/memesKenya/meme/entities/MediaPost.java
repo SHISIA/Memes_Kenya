@@ -27,8 +27,7 @@ public class MediaPost extends Post {
             unique = true
     )
     @GeneratedValue (generator = "UUID",strategy = GenerationType.AUTO)
-    @GenericGenerator(name = "uuid",strategy = "org.hibernate.id.UUIDGenerator")
-//    @Type(type = "org.hibernate.type.UUIDCharType")
+    @GenericGenerator(name = "uuid")
     private  UUID postId;
 
     private String imageType;
@@ -39,7 +38,7 @@ public class MediaPost extends Post {
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY
     )
-    @JoinColumn(name = "user_Id",unique = true,referencedColumnName = "user_Id")
+    @JoinColumn(name = "user_Id",referencedColumnName = "user_Id")
     @JsonBackReference
     private  Memer memer;
 
