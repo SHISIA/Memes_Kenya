@@ -7,6 +7,8 @@ import com.memesKenya.meme.repository.MemerRepo;
 import com.memesKenya.meme.repository.PostRepo;
 import com.memesKenya.meme.service._service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -77,6 +79,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public Memer postOwner(UUID postOwner, UUID postId) {
         return repo.postOwner(postOwner,postId);
+    }
+
+    @Override
+    public Page<MediaPost> getPosts(PageRequest pageRequest) {
+        return repo.findAll(pageRequest);
     }
 
 }

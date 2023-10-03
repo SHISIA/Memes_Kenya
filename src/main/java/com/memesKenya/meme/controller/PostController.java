@@ -7,6 +7,8 @@ import com.memesKenya.meme.service._service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -75,6 +77,12 @@ public class PostController {
     @GetMapping("/getOwner/{id}")
     public Memer getPostOwner(@RequestParam("owner") UUID postOwner,@PathVariable("id") UUID postId){
         return postService.postOwner(postOwner,postId);
+    }
+
+    @GetMapping
+    public Page<MediaPost> getPosts(@RequestParam int page,@RequestParam int size){
+        PageRequest pageRequest=PageRequest.of(page,size);
+        return postService.getPosts(pageRequest);
     }
 
 }

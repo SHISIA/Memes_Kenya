@@ -3,12 +3,16 @@ package com.memesKenya.meme.service._service;
 import com.memesKenya.meme.Exceptions.PostNotFoundException;
 import com.memesKenya.meme.entities.MediaPost;
 import com.memesKenya.meme.entities.Memer;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
 public interface PostService {
     MediaPost upload(MultipartFile file,String userId,String description) throws Exception;
+
+
 
     MediaPost findPostByUUID(UUID postId) throws PostNotFoundException;
 
@@ -22,5 +26,7 @@ public interface PostService {
 
     int likeCount(UUID postId);
     Memer postOwner(UUID postOwner,UUID postId);
+
+    Page<MediaPost> getPosts(PageRequest pageRequest);
 }
 

@@ -5,12 +5,9 @@ import com.memesKenya.meme.entities.Memer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-
 import java.util.UUID;
 
-public interface PostRepo extends CrudRepository<MediaPost, UUID> {
+public interface PostRepo extends JpaRepository<MediaPost, UUID> {
 
     @Modifying
     @Query("UPDATE MediaPost m SET m.likeCount=m.likeCount+1 WHERE m.postId=?1 ")
