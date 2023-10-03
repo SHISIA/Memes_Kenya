@@ -3,7 +3,6 @@ package com.memesKenya.meme.service._service;
 import com.memesKenya.meme.entities.Memer;
 import com.memesKenya.meme.entities.SecurityUser;
 import com.memesKenya.meme.model.Person;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,4 +23,6 @@ public interface MemerService {
     Memer getMemerByAnyName(String nameOrPhone);
 
      SecurityUser findBySubId(String subId);
+
+    Memer findByUsername(String username);
 }
