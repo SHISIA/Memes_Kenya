@@ -59,9 +59,9 @@ public class Memer extends User {
    @ManyToOne(fetch = FetchType.LAZY,targetEntity = ChatRoom.class)
    private ChatRoom chat;
 
-   @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-   @ToString.Exclude
-   private List<Notification> notifications;
+//   @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+//   @ToString.Exclude
+//   private List<Notification> notifications;
 
    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "memer")
    @ToString.Exclude
