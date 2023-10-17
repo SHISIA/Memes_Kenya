@@ -33,6 +33,7 @@ public class MediaPost extends Post {
     private String imageType;
 
     @Lob
+    @Column(columnDefinition = "LONGBLOB")
     private byte[] imageData;
     @ManyToOne(
             cascade = CascadeType.ALL,
@@ -45,8 +46,8 @@ public class MediaPost extends Post {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "post")
     private List<Comment> comments;
 
-    public MediaPost(String title, double mediaSize, String imageType, byte[] imageData,Memer owner){
-        super(title,Timestamp.from(Instant.now()),0,0,0,0,mediaSize);
+    public MediaPost(String title, double mediaSize, String imageType, byte[] imageData,Memer owner,String nickName){
+        super(title,Timestamp.from(Instant.now()),0,0,0,0,mediaSize,nickName);
         this.imageType=imageType;
         this.imageData=imageData;
         this.memer=owner;
