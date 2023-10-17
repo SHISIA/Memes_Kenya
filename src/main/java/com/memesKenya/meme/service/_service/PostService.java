@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.UUID;
 
 public interface PostService {
-    MediaPost upload(MultipartFile file,String userId,String description) throws Exception;
+    void upload(MultipartFile file,String userId,String description,String nickName) throws Exception;
 
     MediaPost findPostByUUID(UUID postId) throws PostNotFoundException;
 
@@ -25,6 +25,10 @@ public interface PostService {
     int likeCount(UUID postId);
     Memer postOwner(UUID postOwner,UUID postId);
 
+    int unLike(UUID postId) throws Exception;
+
     Page<MediaPost> getPosts(PageRequest pageRequest);
+
+    int getDownloads(UUID postId);
 }
 
