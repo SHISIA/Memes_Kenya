@@ -10,6 +10,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +34,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.*;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.AuthorizedClientServiceOAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -50,6 +53,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import javax.sql.DataSource;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,9 +75,9 @@ public class SecurityConfig<S extends Session> {
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
 
-    public static final String ipUrl="http://192.168.100.211:3000",
+    public static final String ipUrl="http://172.29.112.1:3000",
     reactUrl="http://localhost:3000",
-            shortIp="http://192.168.100.211:8082",
+            shortIp="http://172.29.112.1:8082",
     currentUrl="http://localhost:8082";
 
     private final RsaKeyProperties rsaKeys;
@@ -124,11 +128,11 @@ public class SecurityConfig<S extends Session> {
 
                 .oauth2ResourceServer(oauthServer -> oauthServer
                         .jwt(Customizer.withDefaults()))
+
                 .exceptionHandling((ex)-> ex
                         .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
                         .accessDeniedHandler(new BearerTokenAccessDeniedHandler())
                 )
-                //oauth2 set up
                 .oauth2Login(auth -> auth
                                 .successHandler(
                                         (request, response, authentication) ->
@@ -151,6 +155,17 @@ public class SecurityConfig<S extends Session> {
                 .build();
     }
 
+    private static Cookie getSessionCookie(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+
+        // Share the session ID with the React frontend via a cookie
+        Cookie sessionCookie = new Cookie("JSESSIONID", session.getId());
+        sessionCookie.setPath("/");
+        sessionCookie.setHttpOnly(true); // Secure this cookie
+        sessionCookie.setSecure(true); // Secure this cookie if your app uses HTTPS
+        return sessionCookie;
+    }
+
     @Autowired
     @Lazy
     TokenService tokenService;
@@ -164,7 +179,7 @@ public class SecurityConfig<S extends Session> {
                         username,
                         password
                 ));
-        return tokenService.generateToken(authentication);
+        return tokenService.generateToken(authentication,30, ChronoUnit.SECONDS);
     }
 
     @Bean
@@ -201,6 +216,7 @@ public class SecurityConfig<S extends Session> {
     public UserDetailsService users(DataSource dataSource) {
         return new JdbcUserDetailsManager(dataSource);
     }
+
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
