@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,7 +37,8 @@ public class AuthController {
             loginRequest.username(),
                     loginRequest.password()
         ));
-        String token = tokenService.generateToken(authentication);
+        String token = tokenService.generateToken(authentication,
+                1, ChronoUnit.DAYS);
         Map<String,String> stringStringMap=new HashMap<>();
         stringStringMap.put("token",token);
         return stringStringMap;

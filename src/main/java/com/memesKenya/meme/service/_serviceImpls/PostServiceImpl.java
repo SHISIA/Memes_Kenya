@@ -7,6 +7,8 @@ import com.memesKenya.meme.repository.MemerRepo;
 import com.memesKenya.meme.repository.PostRepo;
 import com.memesKenya.meme.service._service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -14,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -27,15 +30,15 @@ public class PostServiceImpl implements PostService {
     MemerRepo memerRepo;
 
     @Override
-    public MediaPost upload(MultipartFile file,String userId,String description) throws Exception {
-        Optional<Memer> memerRes = memerRepo.findById(UUID.fromString(userId));
+    public void upload(MultipartFile file,String userId,String description,String nickName) throws Exception {
+        Optional<Memer> memerResult = memerRepo.findById(UUID.fromString(userId));
         String fileName= StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         if (fileName.contains("..")){
             throw new Exception("Cannot find file specified");
         }
         MediaPost image=new MediaPost(description,file.getSize(),file.getContentType(),file.getBytes(),
-                memerRes.get());
-        return repo.save(image);
+                memerResult.get(),nickName);
+         repo.save(image);
     }
 
     @Override
@@ -77,6 +80,25 @@ public class PostServiceImpl implements PostService {
     @Override
     public Memer postOwner(UUID postOwner, UUID postId) {
         return repo.postOwner(postOwner,postId);
+    }
+
+    @Override
+    @Transactional
+    public int unLike(UUID postId) throws Exception {
+        MediaPost mediaPost = repo.findById(postId)
+                .orElseThrow(() -> new Exception("Post Not Available" + postId));
+        repo.unLike(mediaPost.getPostId());
+        return likeCount(mediaPost.getPostId());
+    }
+
+    @Override
+    public Page<MediaPost> getPosts(PageRequest pageRequest) {
+        return repo.findAll(pageRequest);
+    }
+
+    @Override
+    public int getDownloads(UUID postId) {
+        return repo.getDownloads(postId);
     }
 
 }

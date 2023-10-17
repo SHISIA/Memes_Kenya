@@ -16,12 +16,12 @@ import java.util.UUID;
 @Table(
         name = "users"
 )
-@AllArgsConstructor
+//@AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class SecurityUser {
     @Id
-    @GeneratedValue (generator = "UUID",strategy = GenerationType.AUTO)
+//    @GeneratedValue (generator = "UUID",strategy = GenerationType.AUTO)
     @Column(
             name = "user_Id",
             nullable = false
@@ -47,7 +47,8 @@ public class SecurityUser {
     @JsonBackReference
     private Memer memer;
 
-    public SecurityUser(String userName, String password, Provider provider, int enabled, String sub_Id,Authorities authorities, Memer memer) {
+    public SecurityUser(UUID userId,String userName, String password, Provider provider, int enabled, String sub_Id,Authorities authorities, Memer memer) {
+        this.userId=userId;
         this.username=userName;
         this.password=password;
         this.enabled=enabled;

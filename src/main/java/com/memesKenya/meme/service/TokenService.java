@@ -19,7 +19,7 @@ public class TokenService {
         this.encoder=encoder;
     }
 
-    public String generateToken(Authentication authentication){
+    public String generateToken(Authentication authentication,long timePeriod,ChronoUnit chronoUnit){
         Instant now=Instant.now();
         String scope = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
@@ -27,11 +27,10 @@ public class TokenService {
         JwtClaimsSet claims=JwtClaimsSet.builder()
                 .issuer("self")
                 .issuedAt(now)
-                .expiresAt(now.plus(1, ChronoUnit.HOURS))
+                .expiresAt(now.plus(timePeriod, chronoUnit))
                 .subject(authentication.getName())
                 .claim("scope",scope)
                 .build();
         return this.encoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }
-
 }
