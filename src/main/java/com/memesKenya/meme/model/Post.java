@@ -22,5 +22,5 @@ public class Post{
     private int views;
     private int downloads;
     private double mediaSize;
-//    private  String genre;
+    private  String nickName;
 }
