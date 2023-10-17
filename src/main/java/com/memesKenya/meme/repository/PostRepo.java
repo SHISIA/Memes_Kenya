@@ -27,6 +27,13 @@ public interface PostRepo extends JpaRepository<MediaPost, UUID> {
     @Query("SELECT m.likeCount FROM MediaPost m WHERE m.postId=?1")
     int getLikeCount(UUID post);
 
-    @Query("SELECT memer FROM Memer memer WHERE memer.userId IN (SELECt m.memer FROM MediaPost m WHERE m.memer=?1 AND m.postId=?2)")
-    public Memer postOwner(UUID postOwner,UUID postId);
+    @Query("SELECT memer FROM Memer memer WHERE memer.userId IN (SELECT m.memer FROM MediaPost m WHERE m.memer=?1 AND m.postId=?2)")
+    Memer postOwner(UUID postOwner, UUID postId);
+
+    @Modifying
+    @Query("UPDATE MediaPost m SET m.likeCount=m.likeCount-1 WHERE m.postId=?1 ")
+    int unLike(UUID postID);
+
+    @Query("SELECT m.downloads FROM MediaPost m WHERE m.postId=?1 ")
+    int getDownloads(UUID postId);
 }
