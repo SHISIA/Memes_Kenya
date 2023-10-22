@@ -1,5 +1,6 @@
 package com.memesKenya.meme.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.memesKenya.meme.model.User;
 import jakarta.persistence.*;
@@ -43,11 +44,13 @@ public class Memer extends User {
    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
    private List<Comment> comments;
 
-   @JsonManagedReference(value = "sender")
+//   @JsonManagedReference(value = "sender")
+   @JsonBackReference
    @OneToMany(cascade = CascadeType.ALL,mappedBy = "sender",fetch = FetchType.LAZY)
    private List<Message> messages;
 
-   @JsonManagedReference(value = "recipient")
+//   @JsonManagedReference(value = "recipient")
+   @JsonBackReference
    @OneToMany(cascade = CascadeType.ALL,mappedBy = "recipient",fetch = FetchType.LAZY)
    private List<Message> received_messages;
 
