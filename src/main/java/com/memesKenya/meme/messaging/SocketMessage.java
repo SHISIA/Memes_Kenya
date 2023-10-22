@@ -9,7 +9,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-public class Message {
+public class SocketMessage {
     private String senderName;
     private String receiverName;
     private String message;
