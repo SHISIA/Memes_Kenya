@@ -1,6 +1,7 @@
 package com.memesKenya.meme.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,15 +30,15 @@ public class Message{
             nullable = false,
             unique = true
     )
-//    @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID messageId;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JsonManagedReference
     @JoinColumn(name = "message_sender",referencedColumnName = "user_Id")
     private Memer sender;
 
-    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JsonBackReference(value = "message_recipient")
+    @ManyToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @JsonManagedReference
     @JoinColumn(name = "message_recipient",referencedColumnName = "user_Id")
     private Memer recipient;
 
