@@ -28,6 +28,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -80,6 +81,13 @@ public class SecurityConfig<S extends Session> {
             shortIp="http://172.29.112.1:8082",
     currentUrl="http://localhost:8082";
 
+    @Autowired
+    @Lazy
+    TokenService tokenService;
+    @Autowired
+    @Lazy
+    AuthenticationManager authenticationManager;
+
     private final RsaKeyProperties rsaKeys;
 
     private static final String tokenBasedRememberMeKey="MemesKenya-Key";
@@ -104,10 +112,19 @@ public class SecurityConfig<S extends Session> {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
+                .headers(headers -> headers
+                // allow same origin to frame our site to support iframe SockJS
+                    .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin
+                ))
+
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(
                                 //allow these requests to pass security
-//                                new AntPathRequestMatcher("/api/v1/Memers/test"),
+                                new AntPathRequestMatcher("/chat"),
+                                new AntPathRequestMatcher("/ws/**"),
+                                new AntPathRequestMatcher("/app/chat/**"),
+                                new AntPathRequestMatcher("/chat/info"),
+                                new AntPathRequestMatcher("/topic/greetings"),
                                 new AntPathRequestMatcher("/api/v1/auth/authenticate"),
                                 new AntPathRequestMatcher("/api/v1/Memers/newMemer"),
                                 new AntPathRequestMatcher("/api/v1/Memers/loggedOut"),
@@ -144,7 +161,6 @@ public class SecurityConfig<S extends Session> {
                                                             "mmerz"
                                                             +
                                                     getToken(user.getUsername(),user.getSub_Id())
-//                                                    +user.getSub_Id()
                                             );
                                         }
                                 ))
@@ -166,12 +182,6 @@ public class SecurityConfig<S extends Session> {
         return sessionCookie;
     }
 
-    @Autowired
-    @Lazy
-    TokenService tokenService;
-    @Autowired
-    @Lazy
-    AuthenticationManager authenticationManager;
 
     public String getToken(String username,String password){
         Authentication authentication= authenticationManager.authenticate(
