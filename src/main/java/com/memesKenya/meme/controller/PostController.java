@@ -87,7 +87,6 @@ public class PostController {
     @GetMapping("/getPosts")
     public Page<MediaPost> getPosts(@RequestParam int page,@RequestParam int size){
         PageRequest pageRequest=PageRequest.of(page,size);
-        System.out.println("Get posts "+page);
         return postService.getPosts(pageRequest);
     }
 
