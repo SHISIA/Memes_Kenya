@@ -76,9 +76,9 @@ public class SecurityConfig<S extends Session> {
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
 
-    public static final String ipUrl="http://172.29.112.1:3000",
+    public static final String ipUrl="http://192.168.100.211:3000",
     reactUrl="http://localhost:3000",
-            shortIp="http://172.29.112.1:8082",
+            shortIp="http://192.168.100.211:8082",
     currentUrl="http://localhost:8082";
 
     @Autowired
