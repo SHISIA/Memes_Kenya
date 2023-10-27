@@ -49,7 +49,7 @@ public class MessageChatController {
         return message;
     }
 
-    @DeleteMapping("/api/v1/getMessagesBySenderAndReceiver")
+    @GetMapping("/api/v1/getMessagesBySenderAndReceiver")
     public Optional<List<Message>> getMessagesBySenderAndReceiver(@RequestBody SenderAndReceiverModel senderAndReceiverModel){
         return messageService.getMessageBySenderAndReceiver(
                 senderAndReceiverModel.getSender(),
