@@ -19,7 +19,7 @@ public interface MessageRepo extends JpaRepository<Message, UUID> {
     void deleteMessage(@Param("sender") Memer sender, @Param("receiver")Memer receiver);
 
     @Query("SELECT m FROM Message m WHERE m.sender = :sender AND m.recipient =:receiver")
-    List<Message> getMessages(@Param("sender") Memer sender, @Param("receiver")Memer receiver);
+    List<Message> getMessagesBySenderAndReceiver(@Param("sender") Memer sender, @Param("receiver")Memer receiver);
 
     @Query("SELECT m FROM Message m where m.sender=?1 OR m.recipient=?1")
     List<Message> findBySender(Memer memerUUID);

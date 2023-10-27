@@ -44,7 +44,7 @@ public class MessageServiceImpl implements MessageService {
     public Optional<List<Message>> getMessageBySenderAndReceiver(UUID sender, UUID receiver) {
         Memer memberSender=memerRepo.findById(sender).get();
         Memer memberReceiver=memerRepo.findById(receiver).get();
-        return Optional.ofNullable(repo.getMessages(memberSender,memberReceiver));
+        return Optional.ofNullable(repo.getMessagesBySenderAndReceiver(memberSender,memberReceiver));
     }
 
     //they are the sender:they send
